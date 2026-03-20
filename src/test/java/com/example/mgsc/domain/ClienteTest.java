@@ -1,5 +1,7 @@
 package com.example.mgsc.domain;
 
+import com.example.mgsc.domain.TipoCliente;
+import com.example.mgsc.domain.Cliente;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;

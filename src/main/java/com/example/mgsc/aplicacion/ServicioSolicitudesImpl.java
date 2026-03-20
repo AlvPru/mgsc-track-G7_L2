@@ -1,6 +1,6 @@
 package com.example.mgsc.aplicacion;
 
-import com.example.mgsc.dominio.Solicitud;
+import com.example.mgsc.domain.Solicitud;
 import com.example.mgsc.puertos.RepositorioCliente;
 import com.example.mgsc.puertos.RepositorioSolicitud;
 import com.example.mgsc.puertos.RepositorioTecnico;

@@ -1,6 +1,6 @@
 package com.example.mgsc.puertos;
 
-import com.example.mgsc.dominio.Tecnico;
+import com.example.mgsc.domain.Tecnico;
 import java.util.List;
 import java.util.UUID;
 

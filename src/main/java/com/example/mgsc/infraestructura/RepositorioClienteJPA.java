@@ -1,6 +1,6 @@
 package com.example.mgsc.infraestructura;
 
-import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.domain.Cliente;
 import com.example.mgsc.puertos.RepositorioCliente;
 import java.util.List;
 import java.util.UUID;

@@ -1,7 +1,7 @@
 package com.example.mgsc.puertos;
 
-import com.example.mgsc.dominio.Cliente;
-import com.example.mgsc.dominio.TipoCliente;
+import com.example.mgsc.domain.Cliente;
+import com.example.mgsc.domain.TipoCliente;
 import java.util.List;
 import java.util.UUID;
 
