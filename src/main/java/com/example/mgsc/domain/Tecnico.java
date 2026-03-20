@@ -1,4 +1,4 @@
-package com.example.mgsc.dominio;
+package com.example.mgsc.domain;
 
 import java.util.UUID;
 

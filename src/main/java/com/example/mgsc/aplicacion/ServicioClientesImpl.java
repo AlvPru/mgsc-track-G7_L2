@@ -1,7 +1,7 @@
 package com.example.mgsc.aplicacion;
 
-import com.example.mgsc.dominio.Cliente;
-import com.example.mgsc.dominio.TipoCliente;
+import com.example.mgsc.domain.Cliente;
+import com.example.mgsc.domain.TipoCliente;
 import com.example.mgsc.puertos.RepositorioCliente;
 import com.example.mgsc.puertos.ServicioGestionClientes;
 import java.util.List;
