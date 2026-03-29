@@ -1,0 +1,28 @@
+package com.example.mgsc.dominio;
+
+public class Cliente extends Persona {
+    private String email;
+    private TipoCliente tipo;
+
+    public Cliente(int id, String nombre, String email, TipoCliente tipo) {
+        super(id, nombre);
+        this.email = email;
+        this.tipo = tipo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public TipoCliente getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoCliente tipo) {
+        this.tipo = tipo;
+    }
+}
