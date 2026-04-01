@@ -33,4 +33,8 @@ public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
     public List<Solicitud> listar() {
         return new ArrayList<>(solicitudes);
     }
+
+    public void limpiar() {
+        solicitudes.clear();
+    }
 }
