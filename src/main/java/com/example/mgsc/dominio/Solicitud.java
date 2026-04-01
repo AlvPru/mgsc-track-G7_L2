@@ -1,18 +1,23 @@
 package com.example.mgsc.dominio;
-
+import java.util.Date;
 public class Solicitud {
+    private static int contadorId = 1;
     private int id;
     private String descripcion;
     private String estado;
-    private Cliente cliente;
+    private Cliente clienteAsignado;
     private Tecnico tecnico;
+    private Date fechaCreacion;
+    private Date fechaCierre;
 
-    public Solicitud(int id, String descripcion, String estado, Cliente cliente, Tecnico tecnico) {
-        this.id = id;
+
+    public Solicitud(String descripcion,  Cliente cliente) {
+        this.id = contadorId++;
         this.descripcion = descripcion;
-        this.estado = estado;
-        this.cliente = cliente;
-        this.tecnico = tecnico;
+        this.estado = "ABIERTA";
+        this.clienteAsignado = cliente;
+        this.tecnico = null;
+        this.fechaCreacion = new Date();
     }
 
     public int getId() {
@@ -39,19 +44,34 @@ public class Solicitud {
         this.estado = estado;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Cliente getClienteAsignado() {
+        return clienteAsignado;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setClienteAsignado(Cliente clienteAsignado) {
+        this.clienteAsignado = clienteAsignado;
     }
 
     public Tecnico getTecnico() {
+        if (tecnico == null) {
+            throw new IllegalStateException("No se ha asignado un técnico a esta solicitud");
+        }   
         return tecnico;
     }
 
     public void setTecnico(Tecnico tecnico) {
         this.tecnico = tecnico;
+    }
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    public Date getFechaCierre() {
+        return fechaCierre;
+    }
+    public void setFechaCierre(Date fechaCierre) {
+        this.fechaCierre = fechaCierre;
     }
 }

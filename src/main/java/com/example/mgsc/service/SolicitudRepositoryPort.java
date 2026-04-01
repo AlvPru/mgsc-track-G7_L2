@@ -8,4 +8,4 @@ public interface SolicitudRepositoryPort {
     void guardar(Solicitud solicitud);
     Optional<Solicitud> buscarPorId(int id);
     List<Solicitud> listar();
-}
+} 
