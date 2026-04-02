@@ -1,8 +1,10 @@
 package com.example.mgsc.service;
 
 import com.example.mgsc.dominio.Cliente;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ClienteService {
     private final ClienteRepositoryPort clienteRepository;
@@ -21,7 +23,7 @@ public class ClienteService {
 
     public List<Cliente> listar() {
         return clienteRepository.listar().stream()
-                .sorted((a, b) -> Boolean.compare(b.esPremium(), a.esPremium()))
-                .collect(java.util.stream.Collectors.toList());
+                .sorted(Comparator.comparing(Cliente::esPremium).reversed())
+                .collect(Collectors.toList());
     }
 }
