@@ -74,4 +74,17 @@ public class Solicitud {
     public void setFechaCierre(Date fechaCierre) {
         this.fechaCierre = fechaCierre;
     }
+
+    @Override
+    public String toString() {
+        return "Solicitud{" +
+                "id=" + id +
+                ", descripcion='" + descripcion + '\'' +
+                ", estado='" + estado + '\'' +
+                ", clienteAsignado=" + clienteAsignado +
+                ", tecnico=" + (tecnico != null ? tecnico.getNombre() : "No asignado") +
+                ", fechaCreacion=" + fechaCreacion +
+                ", fechaCierre=" + fechaCierre +
+                '}';
+    }
 }
