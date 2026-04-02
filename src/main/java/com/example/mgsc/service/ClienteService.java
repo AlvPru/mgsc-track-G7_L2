@@ -20,6 +20,8 @@ public class ClienteService {
     }
 
     public List<Cliente> listar() {
-        return clienteRepository.listar();
+        return clienteRepository.listar().stream()
+                .sorted((a, b) -> Boolean.compare(b.esPremium(), a.esPremium()))
+                .collect(java.util.stream.Collectors.toList());
     }
 }
