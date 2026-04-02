@@ -1,8 +1,10 @@
 package com.example.mgsc.service;
 
 import com.example.mgsc.dominio.Tecnico;
+import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service
 public class TecnicoService {
     private final TecnicoRepositoryPort tecnicoRepository;
 
