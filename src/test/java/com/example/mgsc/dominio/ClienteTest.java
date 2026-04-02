@@ -1,0 +1,41 @@
+package com.example.mgsc.dominio;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class ClienteTest {
+
+    @Test
+    void debeCrearClienteStandardConDatosValidos() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        assertEquals(1, cliente.getId());
+        assertEquals("Juan", cliente.getNombre());
+        assertEquals("juan@email.com", cliente.getEmail());
+        assertEquals(TipoCliente.STANDARD, cliente.getTipo());
+    }
+
+    @Test
+    void debeCrearClientePremiumConDatosValidos() {
+        Cliente cliente = new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        assertEquals(TipoCliente.PREMIUM, cliente.getTipo());
+    }
+
+    @Test
+    void esPremiumDebeRetornarTrueParaTipoPremium() {
+        Cliente cliente = new Cliente(1, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        assertTrue(cliente.esPremium());
+    }
+
+    @Test
+    void esPremiumDebeRetornarFalseParaTipoStandard() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        assertFalse(cliente.esPremium());
+    }
+
+    @Test
+    void cambiarEmailDebeActualizarElEmail() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        cliente.cambiarEmail("nuevo@email.com");
+        assertEquals("nuevo@email.com", cliente.getEmail());
+    }
+}
