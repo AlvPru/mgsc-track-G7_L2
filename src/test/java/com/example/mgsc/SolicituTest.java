@@ -1,5 +1,6 @@
 package com.example.mgsc;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,16 +21,23 @@ public class SolicituTest {
 
     @BeforeEach
     public void setUp() {
-        SolicitudRepositoryMemoria.getInstance().limpiar();
         solicitudController = new SolicitudController(new SolicitudService(SolicitudRepositoryMemoria.getInstance()));
 
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
         Cliente cliente = new Cliente(1, "Carlos", "Lopez", TipoCliente.STANDARD);
         Solicitud solicitud1 = new Solicitud("prueba", cliente);
+        Solicitud solicitud2 = new Solicitud("prueba", cliente);
 
         // registrar informacion
         solicitudController.registrarSolicitud(solicitud1);
+        solicitudController.registrarSolicitud(solicitud2);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Limpiar datos después de cada prueba
+        SolicitudRepositoryMemoria.getInstance().listar().clear();
     }
 
     @Test
@@ -37,7 +45,7 @@ public class SolicituTest {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
         assertEquals(-1, solicitudController.asignarTecnico(1, tecnicoInactivo));
-        assertEquals(0, solicitudController.asignarTecnico(1, tecnicoActivo));
+        assertEquals(0, solicitudController.asignarTecnico(2, tecnicoActivo));
     }
 
     @Test
