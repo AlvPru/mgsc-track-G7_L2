@@ -25,4 +25,12 @@ public class Cliente extends Persona {
     public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
     }
+
+    public boolean esPremium() {
+        return TipoCliente.PREMIUM.equals(this.tipo);
+    }
+
+    public void cambiarEmail(String nuevoEmail) {
+        this.email = nuevoEmail;
+    }
 }

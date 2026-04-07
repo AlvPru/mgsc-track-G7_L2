@@ -22,4 +22,14 @@ public class SolicitudService {
     public List<Solicitud> listar() {
         return solicitudRepository.listar();
     }
+
+    public Solicitud getProximaSolicitud() {
+        return solicitudRepository.getProximaSolicitud();
+    }
+
+
+    public int modificar(Solicitud solicitud) {
+        return solicitudRepository.modificar(solicitud);
+    }
+
 }
