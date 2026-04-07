@@ -29,7 +29,8 @@ public class SolicitudController {
         }
         solicitud.setTecnico(tecnico);
         solicitud.setEstado("EN PROCESO");
-        return solicitudService.modificar(solicitud); // Retorna 0 si la modificación fue exitosa
+        solicitudService.modificar(solicitud);
+        return 0; // Retorna 0 si la modificación fue exitosa
     }
 
     public Solicitud getProximaSolicitud() {
