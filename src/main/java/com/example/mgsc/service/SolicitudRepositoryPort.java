@@ -6,6 +6,12 @@ import java.util.Optional;
 
 public interface SolicitudRepositoryPort {
     void guardar(Solicitud solicitud);
+
     Optional<Solicitud> buscarPorId(int id);
+
     List<Solicitud> listar();
+
+    int modificar(Solicitud solicitud);
+
+    Solicitud getProximaSolicitud();
 }
