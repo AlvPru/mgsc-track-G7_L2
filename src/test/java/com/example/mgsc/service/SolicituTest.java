@@ -1,4 +1,4 @@
-package com.example.mgsc;
+package com.example.mgsc.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
