@@ -58,8 +58,14 @@ public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
     public int modificar(Solicitud solicitud) {
         Optional<Solicitud> solicitudExistente = buscarPorId(solicitud.getId());
         if (solicitudExistente.isPresent()) {
-            solicitudes.remove(solicitudExistente.get());
-            solicitudes.add(solicitud);
+            Solicitud existente = solicitudExistente.get();
+            solicitudes.remove(existente);
+            solicitudesPremium.remove(existente);
+            if (solicitud.getClienteAsignado().getTipo() == TipoCliente.PREMIUM) {
+                solicitudesPremium.add(solicitud);
+            } else {
+                solicitudes.add(solicitud);
+            }
             return 0; // Modificación exitosa
         }
         return -1; // Solicitud no encontrada
