@@ -19,10 +19,6 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
         return instance;
     }
 
-    public void limpiar() {
-        clientes.clear();
-    }
-
     @Override
     public void guardar(Cliente cliente) {
         clientes.add(cliente);
