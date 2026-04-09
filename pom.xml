@@ -31,7 +31,6 @@
 		<java.version>17</java.version>
 		<sonar.organization>alvpru</sonar.organization>
 		<sonar.projectKey>AlvPru_mgsc-track-G7_L2</sonar.projectKey>
-		<sonar.organization>tu-organizacion</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
