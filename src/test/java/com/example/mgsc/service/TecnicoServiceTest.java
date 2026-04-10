@@ -23,29 +23,37 @@ public class TecnicoServiceTest {
 
     @Test
     void deberiaGuardarUnTecnico() {
-        // Le pasamos: ID (1), Nombre ("Juan"), Especialidad ("Redes"), y Activo (true)
         Tecnico tecnico = new Tecnico(1, "Juan", "Redes", true);
-        
         tecnicoService.guardar(tecnico);
         
         List<Tecnico> lista = tecnicoService.listar();
         assertEquals(1, lista.size());
     }
 
+    // --- SEPARACIÓN DE LA REGLA DE NEGOCIO ---
+
+    // 1. CASO ACERTADO (Camino Feliz): Comprueba que la regla funciona cuando debe funcionar
     @Test
-    void deberiaFiltrarTecnicosActivos() {
-        // Técnico 1: Activo (true)
+    void deberiaEncontrarTecnicoActivo() {
         Tecnico tecnicoActivo = new Tecnico(1, "Ana", "Software", true);
-        
-        // Técnico 2: Inactivo (false)
-        Tecnico tecnicoInactivo = new Tecnico(2, "Luis", "Hardware", false);
-        
         tecnicoService.guardar(tecnicoActivo);
+        
+        List<Tecnico> activos = tecnicoService.buscarActivo();
+        
+        // Esperamos encontrar 1 técnico y que su estado sea "true"
+        assertEquals(1, activos.size());
+        assertTrue(activos.get(0).isActivo());
+    }
+
+    // 2. CASO ERRÓNEO / NEGATIVO: Comprueba que la regla bloquea lo que tiene que bloquear
+    @Test
+    void noDeberiaEncontrarTecnicoInactivo() {
+        Tecnico tecnicoInactivo = new Tecnico(2, "Luis", "Hardware", false);
         tecnicoService.guardar(tecnicoInactivo);
         
         List<Tecnico> activos = tecnicoService.buscarActivo();
         
-        assertEquals(1, activos.size());
-        assertTrue(activos.get(0).isActivo());
+        // Esperamos encontrar 0 técnicos en la lista de activos, porque el sistema lo ha filtrado
+        assertEquals(0, activos.size());
     }
 }
