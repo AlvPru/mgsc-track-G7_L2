@@ -44,14 +44,11 @@ public class SolicituControlerTest {
     @Test
     public void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        assertEquals(0, solicitudController.asignarTecnico(2, tecnicoActivo));
+        assertEquals(0, solicitudController.asignarTecnico(1, tecnicoActivo));
     }
 
     @Test
     public void testCierreSolicitudEnProcesoDevuelveOk() {
-        Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
-        Solicitud solicitudMal = new Solicitud("prueba", cliente2);
-        solicitudController.registrarSolicitud(solicitudMal);
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
 
         solicitudController.asignarTecnico(1, tecnicoActivo);
