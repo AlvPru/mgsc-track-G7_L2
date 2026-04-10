@@ -11,7 +11,7 @@ import com.example.mgsc.dominio.*;
 public class MgscApplication {
 
 	public static void main(String[] args) {
-
+		
 	}
 
 }

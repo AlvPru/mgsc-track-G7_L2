@@ -13,8 +13,6 @@ import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.infrastucture.SolicitudRepositoryMemoria;
 import com.example.mgsc.service.SolicitudService;
 
-import java.util.Date;
-
 public class SolicituTest {
 
     private SolicitudController solicitudController;
@@ -23,8 +21,6 @@ public class SolicituTest {
     public void setUp() {
         solicitudController = new SolicitudController(new SolicitudService(SolicitudRepositoryMemoria.getInstance()));
 
-        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
         Cliente cliente = new Cliente(1, "Carlos", "Lopez", TipoCliente.STANDARD);
         Solicitud solicitud1 = new Solicitud("prueba", cliente);
         Solicitud solicitud2 = new Solicitud("prueba", cliente);
@@ -41,15 +37,19 @@ public class SolicituTest {
     }
 
     @Test
-    public void testAsignacionTecnicoActivoEnSolicitud() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
+    public void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
         assertEquals(-1, solicitudController.asignarTecnico(1, tecnicoInactivo));
+    }
+
+    @Test
+    public void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
+        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
         assertEquals(0, solicitudController.asignarTecnico(2, tecnicoActivo));
     }
 
     @Test
-    public void testCierreSolicitudSoloEnProceso() {
+    public void testCierreSolicitudEnProcesoDevuelveOk() {
         Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
         Solicitud solicitudMal = new Solicitud("prueba", cliente2);
         solicitudController.registrarSolicitud(solicitudMal);
@@ -57,7 +57,15 @@ public class SolicituTest {
 
         solicitudController.asignarTecnico(1, tecnicoActivo);
         assertEquals(0, solicitudController.cerrarSolicitud(1));
-        assertEquals(-1, solicitudController.cerrarSolicitud(2));
+    }
+
+    @Test
+    public void testCierreSolicitudNoEnProcesoDevuelveError() {
+        Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
+        Solicitud solicitudMal = new Solicitud("prueba", cliente2);
+        
+        solicitudController.registrarSolicitud(solicitudMal);
+        assertEquals(-1, solicitudController.cerrarSolicitud(solicitudMal.getId()));
     }
 
     @Test
