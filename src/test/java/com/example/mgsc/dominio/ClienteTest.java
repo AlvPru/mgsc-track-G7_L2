@@ -38,4 +38,32 @@ class ClienteTest {
         cliente.cambiarEmail("nuevo@email.com");
         assertEquals("nuevo@email.com", cliente.getEmail());
     }
+
+    @Test
+    void setEmailDebeActualizarEmail() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setEmail("otro@email.com");
+        assertEquals("otro@email.com", cliente.getEmail());
+    }
+
+    @Test
+    void setTipoDebeActualizarTipo() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setTipo(TipoCliente.PREMIUM);
+        assertEquals(TipoCliente.PREMIUM, cliente.getTipo());
+    }
+
+    @Test
+    void setIdDebeActualizarId() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(99);
+        assertEquals(99, cliente.getId());
+    }
+
+    @Test
+    void setNombreDebeActualizarNombre() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setNombre("Pedro");
+        assertEquals("Pedro", cliente.getNombre());
+    }
 }
