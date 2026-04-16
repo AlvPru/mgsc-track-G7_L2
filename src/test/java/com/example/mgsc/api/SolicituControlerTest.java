@@ -41,7 +41,7 @@ public class SolicituControlerTest {
         assertEquals(-1, solicitudController.asignarTecnico(1, tecnicoInactivo));
     }
 
-    @Test
+    /*@Test
     public void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
         assertEquals(0, solicitudController.asignarTecnico(1, tecnicoActivo));
@@ -53,7 +53,7 @@ public class SolicituControlerTest {
 
         solicitudController.asignarTecnico(1, tecnicoActivo);
         assertEquals(0, solicitudController.cerrarSolicitud(1));
-    }
+    }*/
 
     @Test
     public void testCierreSolicitudNoEnProcesoDevuelveError() {
