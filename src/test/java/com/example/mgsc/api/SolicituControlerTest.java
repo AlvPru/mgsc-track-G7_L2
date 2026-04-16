@@ -15,14 +15,17 @@ import com.example.mgsc.service.SolicitudService;
 public class SolicituControlerTest {
 
     private SolicitudController solicitudController;
+    private Solicitud solicitud1;
+    private Solicitud solicitud2;
 
     @BeforeEach
     public void setUp() {
+        SolicitudRepositoryMemoria.getInstance().limpiar();
         solicitudController = new SolicitudController(new SolicitudService(SolicitudRepositoryMemoria.getInstance()));
 
         Cliente cliente = new Cliente(1, "Carlos", "Lopez", TipoCliente.STANDARD);
-        Solicitud solicitud1 = new Solicitud("prueba", cliente);
-        Solicitud solicitud2 = new Solicitud("prueba", cliente);
+        solicitud1 = new Solicitud("prueba", cliente);
+        solicitud2 = new Solicitud("prueba", cliente);
 
         // registrar informacion
         solicitudController.registrarSolicitud(solicitud1);
@@ -31,28 +34,27 @@ public class SolicituControlerTest {
 
     @AfterEach
     public void tearDown() {
-        // Limpiar datos después de cada prueba
-        SolicitudRepositoryMemoria.getInstance().listar().clear();
+        SolicitudRepositoryMemoria.getInstance().limpiar();
     }
 
     @Test
     public void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
-        assertEquals(-1, solicitudController.asignarTecnico(1, tecnicoInactivo));
+        assertEquals(-1, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoInactivo));
     }
 
     @Test
     public void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        assertEquals(0, solicitudController.asignarTecnico(1, tecnicoActivo));
+        assertEquals(0, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoActivo));
     }
 
     @Test
     public void testCierreSolicitudEnProcesoDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
 
-        solicitudController.asignarTecnico(1, tecnicoActivo);
-        assertEquals(0, solicitudController.cerrarSolicitud(1));
+        solicitudController.asignarTecnico(solicitud1.getId(), tecnicoActivo);
+        assertEquals(0, solicitudController.cerrarSolicitud(solicitud1.getId()));
     }
 
     @Test
