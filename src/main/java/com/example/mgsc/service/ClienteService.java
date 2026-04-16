@@ -13,8 +13,12 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public void guardar(Cliente cliente) {
+    public int guardar(Cliente cliente) {
+        if (clienteRepository.buscarPorId(cliente.getId()).isPresent()) {
+            return -1;
+        }
         clienteRepository.guardar(cliente);
+        return 0;
     }
 
     public Optional<Cliente> buscarPorId(int id) {
@@ -22,8 +26,6 @@ public class ClienteService {
     }
 
     public List<Cliente> listar() {
-        return clienteRepository.listar().stream()
-                .sorted(Comparator.comparing(Cliente::esPremium).reversed())
-                .collect(Collectors.toList());
+        return clienteRepository.listar();
     }
 }

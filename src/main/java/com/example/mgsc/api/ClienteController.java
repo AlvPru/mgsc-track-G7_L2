@@ -14,10 +14,9 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    public Cliente crearCliente(int id, String nombre, String email, String tipo) {
-        Cliente cliente = new Cliente(id, nombre, email, TipoCliente.valueOf(tipo));
-        clienteService.guardar(cliente);
-        return cliente;
+    public int registrarCliente(Cliente cliente) {
+        return clienteService.guardar(cliente);
+
     }
 
     public Optional<Cliente> buscarPorId(int id) {

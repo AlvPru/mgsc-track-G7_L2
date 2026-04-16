@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
-    private static ClienteRepositoryMemoria instance;
-    private final List<Cliente> clientes = new ArrayList<>();
+    private static ClienteRepositoryMemoria instance=new ClienteRepositoryMemoria();
+    private final List<Cliente> clientes;
 
-    private ClienteRepositoryMemoria() {}
+    private ClienteRepositoryMemoria() {
+        clientes = new ArrayList<>();
+    }
 
     public static ClienteRepositoryMemoria getInstance() {
         if (instance == null) {
@@ -32,5 +34,9 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
     @Override
     public List<Cliente> listar() {
         return new ArrayList<>(clientes);
+    }
+
+    public void clear() {
+        clientes.clear();
     }
 }

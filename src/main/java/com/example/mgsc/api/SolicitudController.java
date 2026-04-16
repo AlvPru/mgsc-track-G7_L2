@@ -5,7 +5,6 @@ import com.example.mgsc.dominio.Solicitud;
 
 import org.jspecify.annotations.Nullable;
 
-import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.Tecnico;
 
 public class SolicitudController {
