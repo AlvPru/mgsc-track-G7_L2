@@ -11,7 +11,7 @@ public class SolicitudTest {
         Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
-        assertNotNull(solicitud.getId());
+        assertTrue(solicitud.getId() > 0);
         assertEquals("Reparar fuga", solicitud.getDescripcion());
         assertEquals("ABIERTA", solicitud.getEstado());
         assertEquals(cliente, solicitud.getClienteAsignado());
