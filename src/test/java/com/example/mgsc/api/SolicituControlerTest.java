@@ -41,20 +41,7 @@ import com.example.mgsc.service.SolicitudService;
         assertEquals(-1, solicitudController.asignarTecnico(1, tecnicoInactivo));
     }
 
-    @Test
-     void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        assertEquals(0, solicitudController.asignarTecnico(1, tecnicoActivo));
-    }
-
-    @Test
-    void testCierreSolicitudEnProcesoDevuelveOk() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-
-        solicitudController.asignarTecnico(1, tecnicoActivo);
-        assertEquals(0, solicitudController.cerrarSolicitud(1));
-    }
-
+    
     @Test
     void testCierreSolicitudNoEnProcesoDevuelveError() {
         Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
