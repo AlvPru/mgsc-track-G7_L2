@@ -1,7 +1,6 @@
 package com.example.mgsc.api;
 
 import com.example.mgsc.dominio.Cliente;
-import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.service.ClienteService;
 
 import java.util.List;

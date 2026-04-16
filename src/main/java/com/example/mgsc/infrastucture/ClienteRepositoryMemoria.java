@@ -8,16 +8,13 @@ import java.util.Optional;
 
 public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
     private static ClienteRepositoryMemoria instance=new ClienteRepositoryMemoria();
-    private final List<Cliente> clientes;
+    private List<Cliente> clientes;
 
     private ClienteRepositoryMemoria() {
         clientes = new ArrayList<>();
     }
 
     public static ClienteRepositoryMemoria getInstance() {
-        if (instance == null) {
-            instance = new ClienteRepositoryMemoria();
-        }
         return instance;
     }
 
@@ -37,6 +34,6 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
     }
 
     public void clear() {
-        clientes.clear();
+        clientes=new ArrayList<>();
     }
 }

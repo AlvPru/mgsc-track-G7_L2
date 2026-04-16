@@ -12,12 +12,13 @@ import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.infrastucture.SolicitudRepositoryMemoria;
 import com.example.mgsc.service.SolicitudService;
 
- class SolicituControlerTest {
+class SolicituControlerTest {
 
     private SolicitudController solicitudController;
 
     @BeforeEach
-     void setUp() {
+    void setUp() {
+        SolicitudRepositoryMemoria.getInstance().listar().clear();
         solicitudController = new SolicitudController(new SolicitudService(SolicitudRepositoryMemoria.getInstance()));
 
         Cliente cliente = new Cliente(1, "Carlos", "Lopez", TipoCliente.STANDARD);
@@ -30,23 +31,22 @@ import com.example.mgsc.service.SolicitudService;
     }
 
     @AfterEach
-     void tearDown() {
+    void tearDown() {
         // Limpiar datos después de cada prueba
         SolicitudRepositoryMemoria.getInstance().listar().clear();
     }
 
     @Test
-     void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
+    void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
         assertEquals(-1, solicitudController.asignarTecnico(1, tecnicoInactivo));
     }
 
-    
     @Test
     void testCierreSolicitudNoEnProcesoDevuelveError() {
         Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
         Solicitud solicitudMal = new Solicitud("prueba", cliente2);
-        
+
         solicitudController.registrarSolicitud(solicitudMal);
         assertEquals(-1, solicitudController.cerrarSolicitud(solicitudMal.getId()));
     }
@@ -59,5 +59,15 @@ import com.example.mgsc.service.SolicitudService;
         solicitudController.registrarSolicitud(solicitudPremium);
 
         assertEquals("PREMIUM", solicitudController.getProximaSolicitud().getClienteAsignado().getTipo().name());
+    }
+
+    @Test
+    void testSolicitudNoEncontradaDevuelveError() {
+        assertEquals(-1, solicitudController.cerrarSolicitud(999));
+    }
+
+    @Test
+    void numeroSolicitudes() {
+        assertEquals(2, solicitudController.listarSolicitudes().size());
     }
 }

@@ -25,4 +25,5 @@ public class Tecnico extends Persona {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
+    
 }

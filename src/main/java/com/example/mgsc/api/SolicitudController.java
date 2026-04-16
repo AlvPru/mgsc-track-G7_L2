@@ -3,6 +3,8 @@ package com.example.mgsc.api;
 import com.example.mgsc.service.SolicitudService;
 import com.example.mgsc.dominio.Solicitud;
 
+import java.util.List;
+
 import org.jspecify.annotations.Nullable;
 
 import com.example.mgsc.dominio.Tecnico;
@@ -39,7 +41,7 @@ public class SolicitudController {
     public @Nullable Integer cerrarSolicitud(int i) {
         Solicitud solicitud = solicitudService.buscarPorId(i).orElse(null);
         if (solicitud == null) {
-            return -1; // Solicitud no encontrada
+            return -1; // Solicitud no encontrada 
         }
         if (!solicitud.getEstado().equals("EN PROCESO")) {
             return -1; // Solo se pueden cerrar solicitudes en proceso
@@ -48,7 +50,7 @@ public class SolicitudController {
         return solicitudService.modificar(solicitud); // Retorna 0 si la modificación fue exitosa
     }
 
-    public Object listarSolicitudes() {
+    public List<Solicitud> listarSolicitudes() {
         return solicitudService.listar();
     }
 }
