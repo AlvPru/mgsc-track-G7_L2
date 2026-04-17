@@ -2,58 +2,95 @@ package com.example.mgsc.service;
 
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.infrastucture.TecnicoRepositoryMemoria;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-public class TecnicoServiceTest {
+// Clase de pruebas unitarias para TecnicoService utilizando Mockito para aislar las dependencias externas.
+@ExtendWith(MockitoExtension.class)
+class TecnicoServiceTest {
 
-    private TecnicoService tecnicoService;
+    // Simulación (Mock) delrepositorio para evitar el uso de datos en memoria o bases de dtos reales
+    @Mock
     private TecnicoRepositoryMemoria repositorio;
 
-    @BeforeEach
-    void setUp() {
-        repositorio = new TecnicoRepositoryMemoria();
-        tecnicoService = new TecnicoService(repositorio);
-    }
+    // Servicio real bajo prueba. Mockito inyecta automaticamente el mock del repositorio definido arriba
+    @InjectMocks
+    private TecnicoService servicio;
 
+    // Comprueba que la acción de guardar en el servicio delega correctamente la tarea al repositorio.
     @Test
-    void deberiaGuardarUnTecnico() {
+    void guardarTecnicoDebeInvocarRepositorio() {
         Tecnico tecnico = new Tecnico(1, "Juan", "Redes", true);
-        tecnicoService.guardar(tecnico);
         
-        List<Tecnico> lista = tecnicoService.listar();
-        assertEquals(1, lista.size());
+        servicio.guardar(tecnico);
+        
+        verify(repositorio).guardar(tecnico);
     }
 
-    // --- SEPARACIÓN DE LA REGLA DE NEGOCIO ---
-
-    // 1. CASO ACERTADO (Camino Feliz): Comprueba que la regla funciona cuando debe funcionar
+    // verifica que el método de listar obtiene y retorna correctamente los datos proporcionados por el repositorio.
     @Test
-    void deberiaEncontrarTecnicoActivo() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Ana", "Software", true);
-        tecnicoService.guardar(tecnicoActivo);
-        
-        List<Tecnico> activos = tecnicoService.buscarActivo();
-        
-        // Esperamos encontrar 1 técnico y que su estado sea "true"
-        assertEquals(1, activos.size());
-        assertTrue(activos.get(0).isActivo());
+    void listarDebeRetornarTodosLosTecnicos() {
+        Tecnico t1 = new Tecnico(1, "Juan", "Redes", true);
+        Tecnico t2 = new Tecnico(2, "Ana", "Software", false);
+        when(repositorio.listar()).thenReturn(Arrays.asList(t1, t2));
+
+        List<Tecnico> resultado = servicio.listar();
+
+        assertEquals(2, resultado.size());
     }
 
-    // 2. CASO ERRÓNEO / NEGATIVO: Comprueba que la regla bloquea lo que tiene que bloquear
+    // --- REGLA DE NEGOCIO: FILTRO DE ACTIVOS ---
+
+    // Happy Path: verifica que el filtro permite el paso a los tecnicos que estan marcados como activos.
     @Test
-    void noDeberiaEncontrarTecnicoInactivo() {
-        Tecnico tecnicoInactivo = new Tecnico(2, "Luis", "Hardware", false);
-        tecnicoService.guardar(tecnicoInactivo);
+    void buscarActivoDebeRetornarSoloTecnicosActivos() {
+        Tecnico activo = new Tecnico(1, "Ana", "Software", true);
+        Tecnico inactivo = new Tecnico(2, "Luis", "Hardware", false);
         
-        List<Tecnico> activos = tecnicoService.buscarActivo();
+        when(repositorio.listar()).thenReturn(Arrays.asList(activo, inactivo));
+
+        List<Tecnico> resultado = servicio.buscarActivo();
+
+        assertEquals(1, resultado.size());
+        assertTrue(resultado.get(0).isActivo());
+        assertEquals("Ana", resultado.get(0).getNombre());
+    }
+
+    // Sad Path (Filtro): Verifica que el filtro bloquea y excluye correctamente a los técnicos inactivos.
+    @Test
+    void buscarActivoNoDebeRetornarTecnicosInactivos() {
+        Tecnico inactivo = new Tecnico(2, "Luis", "Hardware", false);
         
-        // Esperamos encontrar 0 técnicos en la lista de activos, porque el sistema lo ha filtrado
-        assertEquals(0, activos.size());
+        when(repositorio.listar()).thenReturn(Arrays.asList(inactivo));
+
+        List<Tecnico> resultado = servicio.buscarActivo();
+
+        assertEquals(0, resultado.size());
+    }
+
+    // --- REGLA DE NEGOCIO: VALIDACIÓN DE GUARDADO ---
+
+    // Sad Path (Validación): Verifica que el sistema aborta la operación si el técnico carece de nombre válido.
+    @Test
+    void guardarTecnicoSinNombreDebeLanzarExcepcion() {
+        Tecnico tecnicoInvalido = new Tecnico(1, "", "Redes", true);
+
+        // Se espera que la validación lance una excepción que interrumpa el flujo.
+        assertThrows(IllegalArgumentException.class, () -> {
+            servicio.guardar(tecnicoInvalido);
+        });
+
+        // Se garantiza la ausencia de efectos secundarios: el repositorio nunca debe ser invocado.
+        verify(repositorio, never()).guardar(any());
     }
 }
