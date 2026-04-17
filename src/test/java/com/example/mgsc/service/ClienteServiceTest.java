@@ -53,4 +53,22 @@ class ClienteServiceTest {
         assertEquals(TipoCliente.PREMIUM, resultado.get(0).getTipo());
         assertEquals(TipoCliente.STANDARD, resultado.get(1).getTipo());
     }
+
+    @Test
+    void cuandoCrearClienteConEmailDuplicadoLanzaExcepcion() {
+        when(repositorio.existePorEmail("juan@email.com")).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () ->
+            servicio.crearCliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD));
+
+        verify(repositorio, never()).guardar(any());
+    }
+
+    @Test
+    void cuandoBuscarClienteInexistenteLanzaExcepcion() {
+        when(repositorio.buscarPorId(99)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () ->
+            servicio.buscarPorIdOrThrow(99));
+    }
 }

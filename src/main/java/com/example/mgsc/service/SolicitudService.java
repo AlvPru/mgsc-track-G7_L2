@@ -1,6 +1,7 @@
 package com.example.mgsc.service;
 
 import com.example.mgsc.dominio.Solicitud;
+import com.example.mgsc.dominio.Tecnico;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,11 @@ public class SolicitudService {
         return solicitudRepository.modificar(solicitud);
     }
 
+    public Solicitud asignarTecnico(int idSolicitud, Tecnico tecnico) {
+        throw new UnsupportedOperationException("no implementado");
+    }
+
+    public Solicitud cambiarEstado(int idSolicitud, String nuevoEstado) {
+        throw new UnsupportedOperationException("no implementado");
+    }
 }

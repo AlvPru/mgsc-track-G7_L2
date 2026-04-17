@@ -33,4 +33,9 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
     public List<Cliente> listar() {
         return new ArrayList<>(clientes);
     }
+
+    @Override
+    public boolean existePorEmail(String email) {
+        return clientes.stream().anyMatch(c -> c.getEmail().equals(email));
+    }
 }

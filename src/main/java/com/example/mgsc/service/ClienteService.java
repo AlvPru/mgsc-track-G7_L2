@@ -1,6 +1,7 @@
 package com.example.mgsc.service;
 
 import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.TipoCliente;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -25,5 +26,13 @@ public class ClienteService {
         return clienteRepository.listar().stream()
                 .sorted(Comparator.comparing(Cliente::esPremium).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public Cliente crearCliente(int id, String nombre, String email, TipoCliente tipo) {
+        throw new UnsupportedOperationException("no implementado");
+    }
+
+    public Cliente buscarPorIdOrThrow(int id) {
+        throw new UnsupportedOperationException("no implementado");
     }
 }
