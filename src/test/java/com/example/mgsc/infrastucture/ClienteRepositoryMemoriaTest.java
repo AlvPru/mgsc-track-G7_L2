@@ -59,4 +59,19 @@ class ClienteRepositoryMemoriaTest {
 
         assertFalse(resultado.isPresent());
     }
+
+    @Test
+    void existePorEmailDevuelveTrueCuandoExiste() {
+        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
+        repo.guardar(new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD));
+
+        assertTrue(repo.existePorEmail("juan@email.com"));
+    }
+
+    @Test
+    void existePorEmailDevuelveFalseCuandoNoExiste() {
+        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
+
+        assertFalse(repo.existePorEmail("noexiste@email.com"));
+    }
 }

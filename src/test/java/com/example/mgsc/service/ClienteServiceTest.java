@@ -55,6 +55,17 @@ class ClienteServiceTest {
     }
 
     @Test
+    void cuandoCrearClienteNuevoDebeGuardarYRetornar() {
+        when(repositorio.existePorEmail("juan@email.com")).thenReturn(false);
+
+        Cliente resultado = servicio.crearCliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+
+        verify(repositorio).guardar(resultado);
+        assertEquals("Juan", resultado.getNombre());
+        assertEquals("juan@email.com", resultado.getEmail());
+    }
+
+    @Test
     void cuandoCrearClienteConEmailDuplicadoLanzaExcepcion() {
         when(repositorio.existePorEmail("juan@email.com")).thenReturn(true);
 
