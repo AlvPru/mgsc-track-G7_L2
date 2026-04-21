@@ -34,10 +34,19 @@ public class SolicitudService {
     }
 
     public Solicitud asignarTecnico(int idSolicitud, Tecnico tecnico) {
-        throw new UnsupportedOperationException("no implementado");
+        Solicitud solicitud = solicitudRepository.buscarPorId(idSolicitud)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada: " + idSolicitud));
+        solicitud.setTecnico(tecnico);
+        solicitud.setEstado("EN PROCESO");
+        solicitudRepository.modificar(solicitud);
+        return solicitud;
     }
 
     public Solicitud cambiarEstado(int idSolicitud, String nuevoEstado) {
-        throw new UnsupportedOperationException("no implementado");
+        Solicitud solicitud = solicitudRepository.buscarPorId(idSolicitud)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada: " + idSolicitud));
+        solicitud.setEstado(nuevoEstado);
+        solicitudRepository.modificar(solicitud);
+        return solicitud;
     }
 }
