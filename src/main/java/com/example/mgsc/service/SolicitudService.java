@@ -34,8 +34,7 @@ public class SolicitudService {
     }
 
     public Solicitud asignarTecnico(int idSolicitud, Tecnico tecnico) {
-        Solicitud solicitud = solicitudRepository.buscarPorId(idSolicitud)
-                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada: " + idSolicitud));
+        Solicitud solicitud = buscarSolicitudOrThrow(idSolicitud);
         solicitud.setTecnico(tecnico);
         solicitud.setEstado("EN PROCESO");
         solicitudRepository.modificar(solicitud);
@@ -43,10 +42,14 @@ public class SolicitudService {
     }
 
     public Solicitud cambiarEstado(int idSolicitud, String nuevoEstado) {
-        Solicitud solicitud = solicitudRepository.buscarPorId(idSolicitud)
-                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada: " + idSolicitud));
+        Solicitud solicitud = buscarSolicitudOrThrow(idSolicitud);
         solicitud.setEstado(nuevoEstado);
         solicitudRepository.modificar(solicitud);
         return solicitud;
+    }
+
+    private Solicitud buscarSolicitudOrThrow(int idSolicitud) {
+        return solicitudRepository.buscarPorId(idSolicitud)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada: " + idSolicitud));
     }
 }
