@@ -29,10 +29,16 @@ public class ClienteService {
     }
 
     public Cliente crearCliente(int id, String nombre, String email, TipoCliente tipo) {
-        throw new UnsupportedOperationException("no implementado");
+        if (clienteRepository.existePorEmail(email)) {
+            throw new IllegalArgumentException("Ya existe un cliente con email: " + email);
+        }
+        Cliente cliente = new Cliente(id, nombre, email, tipo);
+        clienteRepository.guardar(cliente);
+        return cliente;
     }
 
     public Cliente buscarPorIdOrThrow(int id) {
-        throw new UnsupportedOperationException("no implementado");
+        return clienteRepository.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + id));
     }
 }
