@@ -3,7 +3,8 @@ package com.example.mgsc.infrastucture;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.TipoCliente;
-import com.example.mgsc.service.SolicitudRepositoryPort;
+import com.example.mgsc.infrastucture.interfaces.SolicitudRepositoryPort;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
     }
 
     @Override
-    public Optional<Solicitud> buscarPorId(int id) {
+    public Optional<Solicitud> buscarPorId(long id) {
         for (Solicitud solicitud : solicitudes) {
             if (solicitud.getId() == id) {
                 return Optional.of(solicitud);

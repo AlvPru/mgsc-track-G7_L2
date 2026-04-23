@@ -1,30 +1,33 @@
 package com.example.mgsc.dominio;
+
+import java.time.LocalDateTime;
 import java.util.Date;
+
+
+
 public class Solicitud {
-    private static int contadorId = 1;
-    private int id;
+
+    private long id;
     private String descripcion;
-    private String estado;
+    private EstadoSolicitud estado;
     private Cliente clienteAsignado;
     private Tecnico tecnico;
-    private Date fechaCreacion;
-    private Date fechaCierre;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCierre;
 
-
-    public Solicitud(String descripcion,  Cliente cliente) {
-        this.id = contadorId++;
+    public Solicitud(String descripcion, Cliente cliente) {
         this.descripcion = descripcion;
-        this.estado = "ABIERTA";
+        this.estado = EstadoSolicitud.PENDIENTE;
         this.clienteAsignado = cliente;
         this.tecnico = null;
-        this.fechaCreacion = new Date();
+        this.fechaCreacion = LocalDateTime.now();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -36,11 +39,11 @@ public class Solicitud {
         this.descripcion = descripcion;
     }
 
-    public String getEstado() {
+    public EstadoSolicitud getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoSolicitud estado) {
         this.estado = estado;
     }
 
@@ -54,37 +57,29 @@ public class Solicitud {
 
     public Tecnico getTecnico() {
         if (tecnico == null) {
-            throw new IllegalStateException("No se ha asignado un técnico a esta solicitud");
-        }   
+            return null;
+        }
         return tecnico;
     }
 
     public void setTecnico(Tecnico tecnico) {
         this.tecnico = tecnico;
     }
-    public Date getFechaCreacion() {
+
+    public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
-    public void setFechaCreacion(Date fechaCreacion) {
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-    public Date getFechaCierre() {
+
+    public LocalDateTime getFechaCierre() {
         return fechaCierre;
     }
-    public void setFechaCierre(Date fechaCierre) {
+
+    public void setFechaCierre(LocalDateTime fechaCierre) {
         this.fechaCierre = fechaCierre;
     }
 
-    @Override
-    public String toString() {
-        return "Solicitud{" +
-                "id=" + id +
-                ", descripcion='" + descripcion + '\'' +
-                ", estado='" + estado + '\'' +
-                ", clienteAsignado=" + clienteAsignado +
-                ", tecnico=" + (tecnico != null ? tecnico.getNombre() : "No asignado") +
-                ", fechaCreacion=" + fechaCreacion +
-                ", fechaCierre=" + fechaCierre +
-                '}';
-    }
 }

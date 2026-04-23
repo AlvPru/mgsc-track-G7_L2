@@ -1,10 +1,12 @@
-package com.example.mgsc.api;
+package com.example.mgsc.unitarios.api;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.mgsc.api.SolicitudController;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.Tecnico;
@@ -12,6 +14,7 @@ import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.infrastucture.SolicitudRepositoryMemoria;
 import com.example.mgsc.service.SolicitudService;
 
+@Tag("unitario")
 public class SolicituControlerTest {
 
     private SolicitudController solicitudController;
@@ -40,6 +43,7 @@ public class SolicituControlerTest {
     @Test
     public void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
+        solicitud1.setId(12234);
         assertEquals(-1, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoInactivo));
     }
 
@@ -52,7 +56,8 @@ public class SolicituControlerTest {
     @Test
     public void testCierreSolicitudEnProcesoDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-
+ 
+        solicitud1.setId(12234);
         solicitudController.asignarTecnico(solicitud1.getId(), tecnicoActivo);
         assertEquals(0, solicitudController.cerrarSolicitud(solicitud1.getId()));
     }

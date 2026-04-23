@@ -1,6 +1,9 @@
-package com.example.mgsc.service;
+package com.example.mgsc.unitarios.service;
 
 import com.example.mgsc.dominio.Tecnico;
+import com.example.mgsc.infrastucture.interfaces.TecnicoRepositoryPort;
+import com.example.mgsc.service.TecnicoService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

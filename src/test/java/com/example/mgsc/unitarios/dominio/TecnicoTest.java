@@ -1,8 +1,13 @@
-package com.example.mgsc.dominio;
+package com.example.mgsc.unitarios.dominio;
 
 import org.junit.jupiter.api.Test;
+
+import com.example.mgsc.dominio.Tecnico;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Tag;
+@Tag("unitario")
 class TecnicoTest {
 
     @Test

@@ -1,5 +1,6 @@
-package com.example.mgsc.api;
+package com.example.mgsc.unitarios.api;
 
+import com.example.mgsc.api.TecnicoController;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.service.TecnicoService;
 import org.junit.jupiter.api.Test;

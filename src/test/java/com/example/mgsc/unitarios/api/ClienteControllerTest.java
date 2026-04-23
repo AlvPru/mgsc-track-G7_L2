@@ -1,8 +1,11 @@
-package com.example.mgsc.api;
+package com.example.mgsc.unitarios.api;
 
+import com.example.mgsc.api.ClienteController;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.service.ClienteService;
+
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Tag("unitario")
 @ExtendWith(MockitoExtension.class)
 class ClienteControllerTest {
 

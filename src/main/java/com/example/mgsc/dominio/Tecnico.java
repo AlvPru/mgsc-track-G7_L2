@@ -4,7 +4,7 @@ public class Tecnico extends Persona {
     private String especialidad;
     private boolean activo;
 
-    public Tecnico(int id, String nombre, String especialidad, boolean activo) {
+    public Tecnico(long id, String nombre, String especialidad, boolean activo) {
         super(id, nombre);
         this.especialidad = especialidad;
         this.activo = activo;
