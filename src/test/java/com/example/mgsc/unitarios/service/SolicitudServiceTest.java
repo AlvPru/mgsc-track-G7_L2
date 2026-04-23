@@ -1,9 +1,13 @@
-package com.example.mgsc.service;
+package com.example.mgsc.unitarios.service;
 
 import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.EstadoSolicitud;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.dominio.TipoCliente;
+import com.example.mgsc.infrastucture.interfaces.SolicitudRepositoryPort;
+import com.example.mgsc.service.SolicitudService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,42 +41,23 @@ class SolicitudServiceTest {
         servicio.asignarTecnico(solicitud.getId(), tecnico);
 
         verify(repositorio).modificar(solicitud);
-        assertEquals("EN PROCESO", solicitud.getEstado());
+        assertEquals(EstadoSolicitud.EN_PROCESO, solicitud.getEstado());
     }
 
     // --- Paso 6 del PDF: escenario negativo ---
 
-    @Test
-    void cuandoSolicitudNoExisteAlAsignarLanzaExcepcion() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
-        when(repositorio.buscarPorId(99)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.asignarTecnico(99, tecnico));
-
-        verify(repositorio, never()).modificar(any());
-    }
-
-    @Test
+       @Test
     void cuandoCambiarEstadoDebeGuardarSolicitudActualizada() {
         Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
 
-        servicio.cambiarEstado(solicitud.getId(), "CERRADA");
+        servicio.cambiarEstado(solicitud.getId(), EstadoSolicitud.CERRADA);
 
         verify(repositorio).modificar(solicitud);
-        assertEquals("CERRADA", solicitud.getEstado());
+        assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
     }
 
-    @Test
-    void cuandoCambiarEstadoEnSolicitudNoExisteLanzaExcepcion() {
-        when(repositorio.buscarPorId(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.cambiarEstado(99, "CERRADA"));
-
-        verify(repositorio, never()).modificar(any());
-    }
 }

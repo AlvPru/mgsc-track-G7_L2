@@ -1,7 +1,8 @@
 package com.example.mgsc.infrastucture;
 
 import com.example.mgsc.dominio.Cliente;
-import com.example.mgsc.service.ClienteRepositoryPort;
+import com.example.mgsc.infrastucture.interfaces.ClienteRepositoryPort;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

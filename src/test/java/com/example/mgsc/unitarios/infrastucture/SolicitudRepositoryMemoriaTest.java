@@ -1,9 +1,13 @@
-package com.example.mgsc.infrastucture;
+package com.example.mgsc.unitarios.infrastucture;
 
 import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.EstadoSolicitud;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.TipoCliente;
+import com.example.mgsc.infrastucture.SolicitudRepositoryMemoria;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Tag("unitario")
 class SolicitudRepositoryMemoriaTest {
 
     private SolicitudRepositoryMemoria repo;
@@ -74,7 +79,7 @@ class SolicitudRepositoryMemoriaTest {
     void modificarSolicitudExistenteDevuelveCero() {
         Solicitud solicitud = new Solicitud("Reparar", clienteStandard);
         repo.guardar(solicitud);
-        solicitud.setEstado("EN PROCESO");
+        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
 
         int resultado = repo.modificar(solicitud);
 

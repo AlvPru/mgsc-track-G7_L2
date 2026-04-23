@@ -1,4 +1,4 @@
-package com.example.mgsc.service;
+package com.example.mgsc.infrastucture.interfaces;
 
 import com.example.mgsc.dominio.Tecnico;
 import java.util.List;

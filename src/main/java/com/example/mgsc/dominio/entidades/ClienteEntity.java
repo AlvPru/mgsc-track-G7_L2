@@ -1,0 +1,31 @@
+package com.example.mgsc.dominio.entidades;
+
+import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.TipoCliente;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "clientes")
+public class ClienteEntity extends PersonaEntity {
+    
+    private String email;
+    private TipoCliente tipo;
+
+    public Cliente toDomain(){
+        Cliente cliente = new Cliente(super.id,super.nombre,email,tipo);
+        cliente.setId(super.getId());
+        cliente.setEmail(this.email);
+        cliente.setTipo(this.tipo);
+        return cliente;
+    }
+
+    public static ClienteEntity fromDomain(Cliente cliente){
+        ClienteEntity entity = new ClienteEntity();
+        entity.id = cliente.getId();
+        entity.nombre = cliente.getNombre();
+        entity.email = cliente.getEmail();
+        entity.tipo = cliente.getTipo();
+        return entity;
+    }
+}

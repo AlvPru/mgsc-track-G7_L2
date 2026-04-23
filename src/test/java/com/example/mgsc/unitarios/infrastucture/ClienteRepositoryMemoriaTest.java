@@ -1,7 +1,9 @@
-package com.example.mgsc.infrastucture;
+package com.example.mgsc.unitarios.infrastucture;
 
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.TipoCliente;
+import com.example.mgsc.infrastucture.ClienteRepositoryMemoria;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

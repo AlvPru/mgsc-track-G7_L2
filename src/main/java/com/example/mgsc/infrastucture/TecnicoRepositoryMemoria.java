@@ -1,7 +1,8 @@
 package com.example.mgsc.infrastucture;
 
 import com.example.mgsc.dominio.Tecnico;
-import com.example.mgsc.service.TecnicoRepositoryPort;
+import com.example.mgsc.infrastucture.interfaces.TecnicoRepositoryPort;
+
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;

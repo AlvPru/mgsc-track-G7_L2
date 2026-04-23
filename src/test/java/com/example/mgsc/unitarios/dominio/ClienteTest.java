@@ -1,10 +1,16 @@
-package com.example.mgsc.dominio;
+package com.example.mgsc.unitarios.dominio;
 
 import org.junit.jupiter.api.Test;
+
+import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.TipoCliente;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class ClienteTest {
+import org.junit.jupiter.api.Tag;
 
+@Tag("unitario")
+class ClienteTest {
     @Test
     void debeCrearClienteStandardConDatosValidos() {
         Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);

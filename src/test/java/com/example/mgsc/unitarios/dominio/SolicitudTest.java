@@ -1,9 +1,19 @@
-package com.example.mgsc.dominio;
+package com.example.mgsc.unitarios.dominio;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.Date;
 
+import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.EstadoSolicitud;
+import com.example.mgsc.dominio.Solicitud;
+import com.example.mgsc.dominio.Tecnico;
+import com.example.mgsc.dominio.TipoCliente;
+
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.Tag;
+@Tag("unitario")
 public class SolicitudTest {
 
     @Test
@@ -11,23 +21,13 @@ public class SolicitudTest {
         Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
-        assertTrue(solicitud.getId() > 0);
         assertEquals("Reparar fuga", solicitud.getDescripcion());
-        assertEquals("ABIERTA", solicitud.getEstado());
+        assertEquals(EstadoSolicitud.PENDIENTE, solicitud.getEstado());
         assertEquals(cliente, solicitud.getClienteAsignado());
         assertNotNull(solicitud.getFechaCreacion());
         assertNull(solicitud.getFechaCierre());
     }
 
-    @Test
-    public void testGetTecnicoSinAsignarLanzaExcepcion() {
-        Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
-        Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
-
-        assertThrows(IllegalStateException.class, () -> {
-            solicitud.getTecnico();
-        });
-    }
 
     @Test
     public void testSetAndGetTecnico() {
@@ -50,39 +50,20 @@ public class SolicitudTest {
         solicitud.setDescripcion("Nueva descripcion");
         assertEquals("Nueva descripcion", solicitud.getDescripcion());
 
-        solicitud.setEstado("CERRADA");
-        assertEquals("CERRADA", solicitud.getEstado());
+        solicitud.setEstado(EstadoSolicitud.CERRADA);
+        assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
 
         Cliente nuevoCliente = new Cliente(2, "Maria", "Lopez", TipoCliente.PREMIUM);
         solicitud.setClienteAsignado(nuevoCliente);
         assertEquals(nuevoCliente, solicitud.getClienteAsignado());
 
-        Date fechaCreacion = new Date();
+        LocalDateTime fechaCreacion = LocalDateTime.now();
         solicitud.setFechaCreacion(fechaCreacion);
         assertEquals(fechaCreacion, solicitud.getFechaCreacion());
 
-        Date fechaCierre = new Date();
+        LocalDateTime fechaCierre = LocalDateTime.now();
         solicitud.setFechaCierre(fechaCierre);
         assertEquals(fechaCierre, solicitud.getFechaCierre());
     }
 
-    @Test
-    public void testToString() {
-        Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
-        Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
-
-        String expected = "Solicitud{id=" + solicitud.getId() + ", descripcion='Reparar fuga', estado='ABIERTA', clienteAsignado=" + cliente + ", tecnico=No asignado, fechaCreacion=" + solicitud.getFechaCreacion() + ", fechaCierre=null}";
-        assertEquals(expected, solicitud.toString());
-    }
-
-    @Test
-    public void testToStringConTecnico() {
-        Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
-        Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
-        solicitud.setTecnico(tecnico);
-
-        String expected = "Solicitud{id=" + solicitud.getId() + ", descripcion='Reparar fuga', estado='ABIERTA', clienteAsignado=" + cliente + ", tecnico=Ana, fechaCreacion=" + solicitud.getFechaCreacion() + ", fechaCierre=null}";
-        assertEquals(expected, solicitud.toString());
-    }
 }

@@ -1,7 +1,10 @@
-package com.example.mgsc.service;
+package com.example.mgsc.unitarios.service;
 
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.TipoCliente;
+import com.example.mgsc.infrastucture.interfaces.ClienteRepositoryPort;
+import com.example.mgsc.service.ClienteService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
