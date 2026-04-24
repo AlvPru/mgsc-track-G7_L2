@@ -41,4 +41,4 @@ Este proyecto utiliza SonarQube para analizar la calidad del código de forma co
 ### Análisis completo
 
 Puedes consultar el informe detallado aquí:  
-👉 https://sonarcloud.io/project/overview?id=AlvPru_mgsc-track-G7_L2
+ https://sonarcloud.io/project/overview?id=AlvPru_mgsc-track-G7_L2
