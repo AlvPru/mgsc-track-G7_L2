@@ -1,8 +1,6 @@
 package com.example.mgsc.infrastucture;
 
-import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.Solicitud;
-import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.infrastucture.interfaces.SolicitudRepositoryPort;
 
 import java.util.ArrayList;
