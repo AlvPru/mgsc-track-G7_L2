@@ -1,10 +1,6 @@
 package com.example.mgsc.dominio;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-
-
-
 public class Solicitud {
 
     private long id;

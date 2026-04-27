@@ -11,8 +11,9 @@ import java.util.List;
 public class TecnicoRepositoryMemoria implements TecnicoRepositoryPort {
     private final List<Tecnico> tecnicos = new ArrayList<>();
 
-    // Constructor público para que Spring Boot pueda usarlo
-    public TecnicoRepositoryMemoria() {}
+    public TecnicoRepositoryMemoria() {
+        //Vacio para que spring pueda inyectar esta clase sin problemas.
+    }
 
     @Override
     public void guardar(Tecnico tecnico) {

@@ -4,7 +4,7 @@ public abstract class Persona {
     private long id;
     private String nombre;
 
-    public Persona(long id, String nombre) {
+    protected Persona(long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
