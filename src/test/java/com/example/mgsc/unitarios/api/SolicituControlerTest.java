@@ -15,14 +15,14 @@ import com.example.mgsc.infrastucture.SolicitudRepositoryMemoria;
 import com.example.mgsc.service.SolicitudService;
 
 @Tag("unitario")
-public class SolicituControlerTest {
+class SolicituControlerTest {
 
     private SolicitudController solicitudController;
     private Solicitud solicitud1;
     private Solicitud solicitud2;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         SolicitudRepositoryMemoria.getInstance().limpiar();
         solicitudController = new SolicitudController(new SolicitudService(SolicitudRepositoryMemoria.getInstance()));
 
@@ -36,25 +36,25 @@ public class SolicituControlerTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         SolicitudRepositoryMemoria.getInstance().limpiar();
     }
 
     @Test
-    public void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
+    void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
         Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
         solicitud1.setId(12234);
         assertEquals(-1, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoInactivo));
     }
 
     @Test
-    public void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
+    void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
         assertEquals(0, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoActivo));
     }
 
     @Test
-    public void testCierreSolicitudEnProcesoDevuelveOk() {
+    void testCierreSolicitudEnProcesoDevuelveOk() {
         Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
  
         solicitud1.setId(12234);
@@ -63,7 +63,7 @@ public class SolicituControlerTest {
     }
 
     @Test
-    public void testCierreSolicitudNoEnProcesoDevuelveError() {
+    void testCierreSolicitudNoEnProcesoDevuelveError() {
         Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
         Solicitud solicitudMal = new Solicitud("prueba", cliente2);
         
@@ -72,7 +72,7 @@ public class SolicituControlerTest {
     }
 
     @Test
-    public void testClientePremiumTienePrioridad() {
+    void testClientePremiumTienePrioridad() {
         // Verificar que un cliente premium tiene prioridad
         Cliente clientePremium = new Cliente(2, "Ana", "Martinez", TipoCliente.PREMIUM);
         Solicitud solicitudPremium = new Solicitud("prueba premium", clientePremium);

@@ -4,10 +4,10 @@ import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.infrastucture.interfaces.ClienteRepositoryPort;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ClienteService {
     private final ClienteRepositoryPort clienteRepository;
@@ -25,9 +25,9 @@ public class ClienteService {
     }
 
     public List<Cliente> listar() {
-        return clienteRepository.listar().stream()
-                .sorted(Comparator.comparing(Cliente::esPremium).reversed())
-                .collect(Collectors.toList());
+        List<Cliente> clientes = new ArrayList<>(clienteRepository.listar());
+        clientes.sort(Comparator.comparing(Cliente::esPremium).reversed());
+        return clientes;
     }
 
     public Cliente crearCliente(int id, String nombre, String email, TipoCliente tipo) {

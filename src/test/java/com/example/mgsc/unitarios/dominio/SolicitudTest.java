@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Tag;
 @Tag("unitario")
-public class SolicitudTest {
+class SolicitudTest {
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
@@ -30,7 +30,7 @@ public class SolicitudTest {
 
 
     @Test
-    public void testSetAndGetTecnico() {
+    void testSetAndGetTecnico() {
         Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
         Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
@@ -40,7 +40,7 @@ public class SolicitudTest {
     }
 
     @Test
-    public void testSettersAndGetters() {
+    void testSettersAndGetters() {
         Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 

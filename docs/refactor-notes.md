@@ -1,0 +1,1 @@
+- 27 de abril de 2026: Eliminados imports no utilizados, eliminado el modificador `public` redundante de todos los tests, reescrito el método `listar` de `ClienteService` para mejorar su legibilidad y claridad y eliminacion de los imports sin usar.

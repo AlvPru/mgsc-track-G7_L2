@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MgscApplication {
 
 	public static void main(String[] args) {
-		
+		//Clase main pendiente de implementación, se puede usar para pruebas rápidas o para iniciar la aplicación si se decide agregar una interfaz de usuario o API REST en el futuro.
 	}
 
 }
