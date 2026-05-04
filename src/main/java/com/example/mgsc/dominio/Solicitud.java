@@ -62,9 +62,6 @@ public class Solicitud {
     }
 
     public Tecnico getTecnico() {
-        if (tecnico == null) {
-            return null;
-        }
         return tecnico;
     }
 
