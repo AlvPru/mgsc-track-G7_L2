@@ -1,6 +1,10 @@
 package com.example.mgsc.dominio;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Solicitud {
 
     private long id;
@@ -10,13 +14,14 @@ public class Solicitud {
     private Tecnico tecnico;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaCierre;
+    private final List<CambioEstado> historial = new ArrayList<>();
 
     public Solicitud(String descripcion, Cliente cliente) {
         this.descripcion = descripcion;
-        this.estado = EstadoSolicitud.PENDIENTE;
         this.clienteAsignado = cliente;
         this.tecnico = null;
         this.fechaCreacion = LocalDateTime.now();
+        setEstado(EstadoSolicitud.PENDIENTE);
     }
 
     public long getId() {
@@ -41,6 +46,11 @@ public class Solicitud {
 
     public void setEstado(EstadoSolicitud estado) {
         this.estado = estado;
+        this.historial.add(new CambioEstado(estado));
+    }
+
+    public List<CambioEstado> getHistorial() {
+        return Collections.unmodifiableList(historial);
     }
 
     public Cliente getClienteAsignado() {
@@ -82,7 +92,7 @@ public class Solicitud {
         if (this.estado != EstadoSolicitud.CERRADA) {
             throw new IllegalStateException("Solo se puede reabrir una solicitud en estado CERRADA");
         }
-        this.estado = EstadoSolicitud.EN_PROCESO;
+        setEstado(EstadoSolicitud.EN_PROCESO);
     }
 
 }
