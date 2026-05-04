@@ -78,4 +78,11 @@ public class Solicitud {
         this.fechaCierre = fechaCierre;
     }
 
+    public void reabrir() {
+        if (this.estado != EstadoSolicitud.CERRADA) {
+            throw new IllegalStateException("Solo se puede reabrir una solicitud en estado CERRADA");
+        }
+        this.estado = EstadoSolicitud.EN_PROCESO;
+    }
+
 }
