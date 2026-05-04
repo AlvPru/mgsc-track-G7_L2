@@ -44,3 +44,15 @@ Ningún test existente debe romperse:
 **Impacto en mantenibilidad:**
 - Si en el futuro se requiere auditoría persistente, la extensión es localizada: añadir `CambioEstadoEntity` + relación en `SolicitudEntity` + migración de BD.
 - El dominio ya está preparado (`CambioEstado` es un Value Object limpio); no habrá refactorización de dominio al persistir.
+
+---
+
+## Resultado de la implementación
+
+| Cambio | Archivos modificados | Tests añadidos |
+|---|---|---|
+| `reabrir()` | `Solicitud.java` | 2 (camino feliz + excepción) |
+| Historial de estados | `Solicitud.java`, `CambioEstado.java` (nuevo) | 1 (orden correcto de 4 entradas) |
+| Refactor servicio | `SolicitudService.java` | 0 (sin comportamiento nuevo) |
+
+**Verificación de regresión:** 61/61 tests en verde. Ningún test previo roto.
