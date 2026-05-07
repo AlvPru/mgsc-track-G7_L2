@@ -36,19 +36,19 @@ public class SolicitudService {
     }
 
     public int asignarTecnico(long idSolicitud, Tecnico tecnico) {
-        Solicitud solicitud = buscarPorId(idSolicitud).orElse(null);
+        Solicitud solicitud = buscarSolicitudOrNull(idSolicitud);
         if (solicitud == null || !tecnico.isActivo()) {
-            return -1; // Solicitud no encontrada o técnico no válido
-        } 
+            return -1;
+        }
         solicitud.setTecnico(tecnico);
         solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
         return solicitudRepository.modificar(solicitud);
     }
 
     public Solicitud cambiarEstado(long idSolicitud, EstadoSolicitud nuevoEstado) {
-        Solicitud solicitud = buscarPorId(idSolicitud).orElse(null);
+        Solicitud solicitud = buscarSolicitudOrNull(idSolicitud);
         if (solicitud == null) {
-            return null; // Solicitud no encontrada
+            return null;
         }
         solicitud.setEstado(nuevoEstado);
         solicitudRepository.modificar(solicitud);
@@ -56,12 +56,16 @@ public class SolicitudService {
     }
 
     public Integer cerrarSolicitud(long idSolicitud) {
-        Solicitud solicitud = buscarPorId(idSolicitud).orElse(null);
-        if (solicitud == null || !solicitud.getEstado().equals(EstadoSolicitud.EN_PROCESO)) {
-            return -1; // Solicitud no encontrada o no en proceso
+        Solicitud solicitud = buscarSolicitudOrNull(idSolicitud);
+        if (solicitud == null || solicitud.getEstado() != EstadoSolicitud.EN_PROCESO) {
+            return -1;
         }
         solicitud.setEstado(EstadoSolicitud.CERRADA);
-        return modificar(solicitud); // Retorna 0 si la modificación fue exitosa
+        return modificar(solicitud);
+    }
+
+    private Solicitud buscarSolicitudOrNull(long idSolicitud) {
+        return solicitudRepository.buscarPorId(idSolicitud).orElse(null);
     }
 
 }

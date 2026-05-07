@@ -2,11 +2,14 @@ package com.example.mgsc.unitarios.dominio;
 
 import org.junit.jupiter.api.Test;
 
+import com.example.mgsc.dominio.CambioEstado;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.EstadoSolicitud;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.dominio.TipoCliente;
+
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,6 +67,46 @@ class SolicitudTest {
         LocalDateTime fechaCierre = LocalDateTime.now();
         solicitud.setFechaCierre(fechaCierre);
         assertEquals(fechaCierre, solicitud.getFechaCierre());
+    }
+
+    @Test
+    void cuandoReopenSolicitudCerradaDebeQuedarEnProceso() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
+
+        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
+        solicitud.setEstado(EstadoSolicitud.CERRADA);
+        solicitud.reabrir();
+
+        assertEquals(EstadoSolicitud.EN_PROCESO, solicitud.getEstado());
+    }
+
+    @Test
+    void cuandoReopenSolicitudNoClosedDebeLanzarExcepcion() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
+
+        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
+
+        assertThrows(IllegalStateException.class, solicitud::reabrir);
+    }
+
+    @Test
+    void elHistorialDebeRegistrarTodosLosCambiosDeEstadoEnOrden() {
+        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Solicitud solicitud = new Solicitud("Reparar fuga", cliente); // PENDIENTE
+
+        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
+        solicitud.setEstado(EstadoSolicitud.CERRADA);
+        solicitud.reabrir();
+
+        List<CambioEstado> historial = solicitud.getHistorial();
+
+        assertEquals(4, historial.size());
+        assertEquals(EstadoSolicitud.PENDIENTE,  historial.get(0).getEstado());
+        assertEquals(EstadoSolicitud.EN_PROCESO, historial.get(1).getEstado());
+        assertEquals(EstadoSolicitud.CERRADA,    historial.get(2).getEstado());
+        assertEquals(EstadoSolicitud.EN_PROCESO, historial.get(3).getEstado());
     }
 
 }
