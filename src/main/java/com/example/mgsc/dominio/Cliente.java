@@ -1,5 +1,5 @@
 package com.example.mgsc.dominio;
-
+ 
 public class Cliente extends Persona {
     private String email;
     private TipoCliente tipo;
