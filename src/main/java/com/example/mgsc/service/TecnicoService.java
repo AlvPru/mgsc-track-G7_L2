@@ -5,6 +5,7 @@ import com.example.mgsc.infrastucture.interfaces.TecnicoRepositoryPort;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TecnicoService {
@@ -24,5 +25,9 @@ public class TecnicoService {
 
     public List<Tecnico> listar() {
         return tecnicoRepository.listar();
+    }
+
+    public Optional<Tecnico> buscarPorId(long id) {
+        return tecnicoRepository.buscarPorId(id);
     }
 }

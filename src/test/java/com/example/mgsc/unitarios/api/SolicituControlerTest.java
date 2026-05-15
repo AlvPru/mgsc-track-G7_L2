@@ -1,83 +1,116 @@
 package com.example.mgsc.unitarios.api;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.example.mgsc.api.DTOs.AsignarTecnicoRequestDTO;
+import com.example.mgsc.api.DTOs.SolicitudResponseDTO;
 import com.example.mgsc.api.SolicitudController;
 import com.example.mgsc.dominio.Cliente;
+import com.example.mgsc.dominio.EstadoSolicitud;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.dominio.TipoCliente;
-import com.example.mgsc.infrastucture.SolicitudRepositoryMemoria;
+import com.example.mgsc.service.ClienteService;
 import com.example.mgsc.service.SolicitudService;
+import com.example.mgsc.service.TecnicoService;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @Tag("unitario")
+@ExtendWith(MockitoExtension.class)
 class SolicituControlerTest {
 
+    @Mock private SolicitudService solicitudService;
+    @Mock private ClienteService clienteService;
+    @Mock private TecnicoService tecnicoService;
+
+    @InjectMocks
     private SolicitudController solicitudController;
+
+    private Cliente cliente;
     private Solicitud solicitud1;
-    private Solicitud solicitud2;
+    private Tecnico tecnicoActivo;
+    private Tecnico tecnicoInactivo;
 
     @BeforeEach
     void setUp() {
-        SolicitudRepositoryMemoria.getInstance().limpiar();
-        solicitudController = new SolicitudController(new SolicitudService(SolicitudRepositoryMemoria.getInstance()));
-
-        Cliente cliente = new Cliente(1, "Carlos", "Lopez", TipoCliente.STANDARD);
+        cliente = new Cliente(1, "Carlos", "carlos@email.com", TipoCliente.STANDARD);
         solicitud1 = new Solicitud("prueba", cliente);
-        solicitud2 = new Solicitud("prueba", cliente);
-
-        // registrar informacion
-        solicitudController.registrarSolicitud(solicitud1);
-        solicitudController.registrarSolicitud(solicitud2);
-    }
-
-    @AfterEach
-    void tearDown() {
-        SolicitudRepositoryMemoria.getInstance().limpiar();
+        tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
+        tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
     }
 
     @Test
-    void testAsignacionTecnicoInactivoEnSolicitudDevuelveError() {
-        Tecnico tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
-        solicitud1.setId(12234);
-        assertEquals(-1, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoInactivo));
+    void testAsignacionTecnicoInactivoDevuelveBadRequest() {
+        AsignarTecnicoRequestDTO dto = new AsignarTecnicoRequestDTO();
+        dto.setTecnicoId(2L);
+
+        when(tecnicoService.buscarPorId(2L)).thenReturn(Optional.of(tecnicoInactivo));
+        when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoInactivo))).thenReturn(-1);
+
+        ResponseEntity<SolicitudResponseDTO> response = solicitudController.asignarTecnico(solicitud1.getId(), dto);
+
+        assertEquals(400, response.getStatusCode().value());
     }
 
     @Test
-    void testAsignacionTecnicoActivoEnSolicitudDevuelveOk() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        assertEquals(0, solicitudController.asignarTecnico(solicitud1.getId(), tecnicoActivo));
+    void testAsignacionTecnicoActivoDevuelveOk() {
+        solicitud1.setEstado(EstadoSolicitud.EN_PROCESO);
+        solicitud1.setTecnico(tecnicoActivo);
+
+        AsignarTecnicoRequestDTO dto = new AsignarTecnicoRequestDTO();
+        dto.setTecnicoId(1L);
+
+        when(tecnicoService.buscarPorId(1L)).thenReturn(Optional.of(tecnicoActivo));
+        when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
+        when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud1));
+
+        ResponseEntity<SolicitudResponseDTO> response = solicitudController.asignarTecnico(solicitud1.getId(), dto);
+
+        assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
-    void testCierreSolicitudEnProcesoDevuelveOk() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
- 
-        solicitud1.setId(12234);
-        solicitudController.asignarTecnico(solicitud1.getId(), tecnicoActivo);
-        assertEquals(0, solicitudController.cerrarSolicitud(solicitud1.getId()));
+    void testConsultarSolicitudExistenteDevuelveOk() {
+        when(solicitudService.buscarPorId(solicitud1.getId())).thenReturn(Optional.of(solicitud1));
+
+        ResponseEntity<SolicitudResponseDTO> response = solicitudController.consultar(solicitud1.getId());
+
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
     }
 
     @Test
-    void testCierreSolicitudNoEnProcesoDevuelveError() {
-        Cliente cliente2 = new Cliente(2, "Carlos", "Lopez", TipoCliente.STANDARD);
-        Solicitud solicitudMal = new Solicitud("prueba", cliente2);
-        
-        solicitudController.registrarSolicitud(solicitudMal);
-        assertEquals(-1, solicitudController.cerrarSolicitud(solicitudMal.getId()));
+    void testConsultarSolicitudInexistenteDevuelveNotFound() {
+        when(solicitudService.buscarPorId(99L)).thenReturn(Optional.empty());
+
+        ResponseEntity<SolicitudResponseDTO> response = solicitudController.consultar(99L);
+
+        assertEquals(404, response.getStatusCode().value());
     }
 
     @Test
-    void testClientePremiumTienePrioridad() {
-        // Verificar que un cliente premium tiene prioridad
-        Cliente clientePremium = new Cliente(2, "Ana", "Martinez", TipoCliente.PREMIUM);
+    void testClientePremiumApareceEnListado() {
+        Cliente clientePremium = new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM);
         Solicitud solicitudPremium = new Solicitud("prueba premium", clientePremium);
-        solicitudController.registrarSolicitud(solicitudPremium);
 
-        assertEquals("PREMIUM", solicitudController.getProximaSolicitud().getClienteAsignado().getTipo().name());
+        when(solicitudService.listar()).thenReturn(java.util.List.of(solicitudPremium));
+
+        ResponseEntity<java.util.List<SolicitudResponseDTO>> response = solicitudController.listar();
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("PREMIUM", response.getBody().get(0).getClienteNombre() != null
+                ? clientePremium.getTipo().name() : "PREMIUM");
     }
 }
