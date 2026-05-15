@@ -1,0 +1,17 @@
+DTO Cliente
+
+- Se creó un `ClienteRequestDTO` y un `ClienteResponseDTO` para separar la entrada y la salida de la API.
+- `ClienteRequestDTO` recibe los datos de la petición `POST` y contiene `id`, `nombre`, `email` y `tipo`.
+- `ClienteResponseDTO` devuelve la información del cliente y también contiene `id`, `nombre`, `email` y `tipo`.
+- Se añadió un constructor sin argumentos en ambos DTOs para que Spring/Jackson puedan deserializar correctamente el JSON.
+- El `ClienteController` mapea el dominio `Cliente` al DTO de respuesta antes de devolverlo, evitando exponer la entidad de dominio directamente.
+- Estas decisiones ayudan a mantener la API REST clara, a controlar mejor los datos que entran y salen, y a ser consistente con buenas prácticas de diseño de servicios.
+
+Pruebas que hay que arreglar:
+- El test `ClienteControllerTest` actual está escrito para el controlador antiguo. Ya no debe usar `crearCliente(1, nombre, email, tipo)` ni devolver `Cliente` directamente.
+- Los métodos a probar ahora son `listarClientes()`, `obtenerCliente(id)` y `crearCliente(request)` con DTOs.
+- El nuevo test de creación debe enviar un `ClienteRequestDTO` y verificar que se devuelve un `ClienteResponseDTO` con los datos esperados.
+- El test de búsqueda debe mockear `clienteService.buscarPorIdOrThrow(id)` y validar que `obtenerCliente` transforma el dominio `Cliente` en el DTO de respuesta.
+- El test de listado debe mockear `clienteService.listar()` y comprobar que el controller devuelve la lista de `ClienteResponseDTO` correctamente mapeada.
+- Si se mantiene un test de integración o un `@WebMvcTest`, también debe validar la serialización/deserialización JSON de los DTOs.
+

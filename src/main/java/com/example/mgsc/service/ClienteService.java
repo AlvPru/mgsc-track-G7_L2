@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+@Service
 public class ClienteService {
     private final ClienteRepositoryPort clienteRepository;
 
@@ -30,7 +32,7 @@ public class ClienteService {
         return clientes;
     }
 
-    public Cliente crearCliente(int id, String nombre, String email, TipoCliente tipo) {
+    public Cliente crearCliente(long id, String nombre, String email, TipoCliente tipo) {
         if (clienteRepository.existePorEmail(email)) {
             throw new IllegalArgumentException("Ya existe un cliente con email: " + email);
         }
@@ -39,7 +41,7 @@ public class ClienteService {
         return cliente;
     }
 
-    public Cliente buscarPorIdOrThrow(int id) {
+    public Cliente buscarPorIdOrThrow(long id) {
         return clienteRepository.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + id));
     }
