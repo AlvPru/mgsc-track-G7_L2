@@ -4,45 +4,57 @@ import com.example.mgsc.api.TecnicoController;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.service.TecnicoService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
-class TecnicoControllerTest {
+// Fase 3: Usamos WebMvcTest para probar exclusivamente la capa web sin levantar toda la BD.
+@WebMvcTest(TecnicoController.class)
+public class TecnicoControllerTest {
 
-    @Mock
-    private TecnicoService tecnicoService;
+    @Autowired
+    private MockMvc mockMvc; // Herramienta para simular peticiones HTTP 
 
-    @InjectMocks
-    private TecnicoController controlador;
+    @MockBean
+    private TecnicoService tecnicoService; // Mockeamos el servicio 
 
     @Test
-    void listarTecnicosDebeRetornarLista() {
-        List<Tecnico> tecnicos = Arrays.asList(
-            new Tecnico(1, "Ana", "Electricidad", true),
-            new Tecnico(2, "Luis", "Redes", false)
-        );
-        when(tecnicoService.listar()).thenReturn(tecnicos);
+    void crearTecnicoDebeRetornarCreated() throws Exception {
+        // Simulamos el DTO de entrada en formato JSON 
+        String requestJson = """
+            {
+                "nombre": "Juan",
+                "especialidad": "Redes",
+                "activo": true
+            }
+            """;
 
-        List<Tecnico> resultado = controlador.listarTecnicos();
-
-        assertEquals(2, resultado.size());
+        // Simulamos un POST y verificamos que el código HTTP devuelto es 201
+        mockMvc.perform(post("/api/tecnicos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void crearTecnicoDebeInvocarServicio() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+    void listarTecnicosDebeRetornarOkYEstructuraJson() throws Exception {
+        // Simulamos que el dominio interno devuelve un técnico
+        Tecnico t1 = new Tecnico(1L, "Juan", "Redes", true);
+        when(tecnicoService.listar()).thenReturn(Arrays.asList(t1));
 
-        controlador.crearTecnico(tecnico);
-
-        verify(tecnicoService).guardar(tecnico);
+        // Hacemos la petición GET y verificamos la estructura JSON del DTO de salida
+        mockMvc.perform(get("/api/tecnicos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nombre").value("Juan"))
+                .andExpect(jsonPath("$[0].especialidad").value("Redes"));
     }
 }
