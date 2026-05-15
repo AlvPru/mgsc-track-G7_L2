@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
+    private long idCounter = 1;
     private final List<Cliente> clientes = new ArrayList<>();
 
     public ClienteRepositoryMemoria() {
@@ -19,6 +20,9 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
 
     @Override
     public void guardar(Cliente cliente) {
+        if(cliente.getId() == -1) {
+            cliente.setId(idCounter++);
+        }
         clientes.add(cliente);
     }
 
@@ -33,7 +37,7 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
     }
 
     @Override
-    public boolean existePorEmail(String email) {
-        return clientes.stream().anyMatch(c -> c.getEmail().equals(email));
+    public boolean existe(String dni) {
+        return clientes.stream().anyMatch(c -> c.getDni().equals(dni));
     }
 }

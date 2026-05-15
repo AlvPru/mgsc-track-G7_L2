@@ -1,31 +1,21 @@
-package com.example.mgsc.api.dto;
+package com.example.mgsc.api.DTOs;
 
-public class TecnicoResponseDTO {
+public class TecnicoRequestDTO {
 
-    private long id;
     private String nombre;
+    private String dni;
     private String especialidad;
     private boolean activo;
 
-    // Constructores
-    public TecnicoResponseDTO(long l, String string, String string2, String string3, boolean b) {}
+    public TecnicoRequestDTO() {
+    }
 
-    public TecnicoResponseDTO(long id, String nombre, String especialidad, boolean activo) {
-        this.id = id;
+    public TecnicoRequestDTO(String nombre, String dni, String especialidad, boolean activo) {
         this.nombre = nombre;
+        this.dni = dni;
         this.especialidad = especialidad;
         this.activo = activo;
     }
-
-    // Getters y Setters
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getNombre() {
         return nombre;
     }
@@ -33,20 +23,22 @@ public class TecnicoResponseDTO {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
+    public String getDni() {
+        return dni;
+    }
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
     public String getEspecialidad() {
         return especialidad;
     }
-
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
-
-    public boolean isActivo() {
+    public boolean getEstado() {
         return activo;
     }
-
-    public void setActivo(boolean activo) {
+    public void setEstado(boolean activo) {
         this.activo = activo;
     }
 }

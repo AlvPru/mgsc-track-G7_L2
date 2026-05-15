@@ -26,7 +26,7 @@ class TecnicoServiceTest {
 
     @Test
     void deberiaGuardarUnTecnico() {
-        Tecnico tecnico = new Tecnico(1, "Juan", "Redes", true);
+        Tecnico tecnico = new Tecnico(1, "Juan", "12345", "Redes", true);
 
         servicio.guardar(tecnico);
 
@@ -36,7 +36,7 @@ class TecnicoServiceTest {
     // 1. CASO ACERTADO (Camino Feliz): la regla funciona cuando debe funcionar
     @Test
     void deberiaEncontrarTecnicoActivo() {
-        Tecnico tecnicoActivo = new Tecnico(1, "Ana", "Software", true);
+        Tecnico tecnicoActivo = new Tecnico(1, "Ana", "67890", "Software", true);
         when(repositorio.buscarActivo()).thenReturn(List.of(tecnicoActivo));
 
         List<Tecnico> activos = servicio.buscarActivo();

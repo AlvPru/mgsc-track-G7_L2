@@ -8,5 +8,5 @@ public interface ClienteRepositoryPort {
     void guardar(Cliente cliente);
     Optional<Cliente> buscarPorId(long id);
     List<Cliente> listar();
-    boolean existePorEmail(String email);
+    boolean existe(String dni);
 }

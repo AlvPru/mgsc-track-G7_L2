@@ -38,10 +38,11 @@ class ClienteControllerWebMvcTest {
 
     @Test
     void listarClientesDevuelveListaDTO() throws Exception {
-        List<Cliente> clientes = Arrays.asList(
-                new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD),
-                new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM)
-        );
+        Cliente cliente1 = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente1.setId(1);
+        Cliente cliente2 = new Cliente("Ana", "67890", "ana@email.com", TipoCliente.PREMIUM);
+        cliente2.setId(2);
+        List<Cliente> clientes = Arrays.asList(cliente1, cliente2);
         when(clienteService.listar()).thenReturn(clientes);
 
         mockMvc.perform(get("/api/clientes"))
@@ -58,7 +59,8 @@ class ClienteControllerWebMvcTest {
 
     @Test
     void obtenerClientePorIdDevuelveDTO() throws Exception {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
         when(clienteService.buscarPorIdOrThrow(1L)).thenReturn(cliente);
 
         mockMvc.perform(get("/api/clientes/1"))
@@ -71,12 +73,13 @@ class ClienteControllerWebMvcTest {
 
     @Test
     void crearClienteDevuelveDTO() throws Exception {
-        Cliente cliente = new Cliente(3, "Pedro", "pedro@email.com", TipoCliente.PREMIUM);
-        when(clienteService.crearCliente(3L, "Pedro", "pedro@email.com", TipoCliente.PREMIUM))
+        Cliente cliente = new Cliente("Pedro", "54321", "pedro@email.com", TipoCliente.PREMIUM);
+        cliente.setId(3);
+        when(clienteService.crearCliente("Pedro", "54321", "pedro@email.com", TipoCliente.PREMIUM))
                 .thenReturn(cliente);
 
         String requestBody = objectMapper.writeValueAsString(
-                new com.example.mgsc.api.DTOs.ClienteRequestDTO(3, "Pedro", "pedro@email.com", TipoCliente.PREMIUM));
+                new com.example.mgsc.api.DTOs.ClienteRequestDTO("Pedro", "54321", "pedro@email.com", TipoCliente.PREMIUM));
 
         mockMvc.perform(post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)

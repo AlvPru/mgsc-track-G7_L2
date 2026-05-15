@@ -32,14 +32,15 @@ class ClienteControllerTest {
 
     @Test
     void crearClienteDebeDelegarAlServicioYRetornarDTO() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
-        when(clienteService.crearCliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD))
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
+        when(clienteService.crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD))
                 .thenReturn(cliente);
 
-        ClienteRequestDTO request = new ClienteRequestDTO(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        ClienteRequestDTO request = new ClienteRequestDTO("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         ClienteResponseDTO resultado = controlador.crearCliente(request);
 
-        verify(clienteService).crearCliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        verify(clienteService).crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         assertNotNull(resultado);
         assertEquals(1, resultado.getId());
         assertEquals("Juan", resultado.getNombre());
@@ -49,7 +50,8 @@ class ClienteControllerTest {
 
     @Test
     void obtenerClienteDebeRetornarDTOCorrecto() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
         when(clienteService.buscarPorIdOrThrow(1)).thenReturn(cliente);
 
         ClienteResponseDTO resultado = controlador.obtenerCliente(1);
@@ -63,10 +65,11 @@ class ClienteControllerTest {
 
     @Test
     void listarClientesDebeRetornarListaDeDTOs() {
-        List<Cliente> clientes = Arrays.asList(
-                new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD),
-                new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM)
-        );
+        Cliente cliente1 = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente1.setId(1);
+        Cliente cliente2 = new Cliente("Ana", "67890", "ana@email.com", TipoCliente.PREMIUM);
+        cliente2.setId(2);
+        List<Cliente> clientes = Arrays.asList(cliente1, cliente2);
         when(clienteService.listar()).thenReturn(clientes);
 
         List<ClienteResponseDTO> resultado = controlador.listarClientes();

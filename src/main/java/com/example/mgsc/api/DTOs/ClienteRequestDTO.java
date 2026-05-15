@@ -3,27 +3,19 @@ package com.example.mgsc.api.DTOs;
 import com.example.mgsc.dominio.TipoCliente;
 
 public class ClienteRequestDTO {
-    private long id;
     private String nombre;
+    private String dni;
     private String email;
     private TipoCliente tipo;
 
     public ClienteRequestDTO() {
     }
 
-    public ClienteRequestDTO(long id, String nombre, String email, TipoCliente tipo) {
-        this.id = id;
+    public ClienteRequestDTO(String nombre,String dni, String email, TipoCliente tipo) {
         this.nombre = nombre;
+        this.dni = dni;
         this.email = email;
         this.tipo = tipo;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -48,5 +40,11 @@ public class ClienteRequestDTO {
 
     public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
+    }
+    public String getDni() {
+        return dni;
+    }
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

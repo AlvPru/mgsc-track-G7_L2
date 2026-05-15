@@ -12,7 +12,7 @@ public class TecnicoEntity extends PersonaEntity {
     private boolean activo;
 
     public Tecnico toDomain(){
-        Tecnico tecnico = new Tecnico(super.id,super.nombre,especialidad,activo);
+        Tecnico tecnico = new Tecnico(super.nombre,super.dni,especialidad,activo);
         tecnico.setId(super.getId());
         tecnico.setEspecialidad(this.especialidad);
         tecnico.setActivo(this.activo);

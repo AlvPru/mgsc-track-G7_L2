@@ -45,10 +45,11 @@ class SolicituControlerTest {
 
     @BeforeEach
     void setUp() {
-        cliente = new Cliente(1, "Carlos", "carlos@email.com", TipoCliente.STANDARD);
+        cliente = new Cliente("Carlos", "12345", "carlos@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
         solicitud1 = new Solicitud("prueba", cliente);
-        tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
+        tecnicoActivo = new Tecnico(1, "Juan", "12345", "Electricidad", true);
+        tecnicoInactivo = new Tecnico(2, "Maria", "67890", "Plomeria", false);
     }
 
     @Test
@@ -102,7 +103,8 @@ class SolicituControlerTest {
 
     @Test
     void testClientePremiumApareceEnListado() {
-        Cliente clientePremium = new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        Cliente clientePremium = new Cliente("Ana", "67890", "ana@email.com", TipoCliente.PREMIUM);
+        clientePremium.setId(2);
         Solicitud solicitudPremium = new Solicitud("prueba premium", clientePremium);
 
         when(solicitudService.listar()).thenReturn(java.util.List.of(solicitudPremium));

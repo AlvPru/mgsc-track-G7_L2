@@ -15,13 +15,13 @@ class ClienteDTOTest {
     void clienteRequestDTOGettersAndSetters() {
         ClienteRequestDTO request = new ClienteRequestDTO();
 
-        request.setId(10);
         request.setNombre("Pedro");
+        request.setDni("12345");
         request.setEmail("pedro@example.com");
         request.setTipo(TipoCliente.PREMIUM);
 
-        assertEquals(10, request.getId());
         assertEquals("Pedro", request.getNombre());
+        assertEquals("12345", request.getDni());
         assertEquals("pedro@example.com", request.getEmail());
         assertEquals(TipoCliente.PREMIUM, request.getTipo());
     }

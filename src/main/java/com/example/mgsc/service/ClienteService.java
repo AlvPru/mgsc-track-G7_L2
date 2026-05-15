@@ -32,11 +32,8 @@ public class ClienteService {
         return clientes;
     }
 
-    public Cliente crearCliente(long id, String nombre, String email, TipoCliente tipo) {
-        if (clienteRepository.existePorEmail(email)) {
-            throw new IllegalArgumentException("Ya existe un cliente con email: " + email);
-        }
-        Cliente cliente = new Cliente(id, nombre, email, tipo);
+    public Cliente crearCliente(String nombre, String dni, String email, TipoCliente tipo) {
+        Cliente cliente = new Cliente(nombre, dni, email, tipo);
         clienteRepository.guardar(cliente);
         return cliente;
     }

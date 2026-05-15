@@ -1,7 +1,7 @@
 package com.example.mgsc.api;
 
-import com.example.mgsc.api.DTOs.AsignarTecnicoRequestDTO;
-import com.example.mgsc.api.DTOs.CambiarEstadoRequestDTO;
+import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
+import com.example.mgsc.api.DTOs.TecnicoResponseDTO;
 import com.example.mgsc.api.DTOs.SolicitudRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudResponseDTO;
 import com.example.mgsc.dominio.Cliente;
@@ -85,9 +85,9 @@ public class SolicitudController {
     @PutMapping("/{id}/tecnico")
     public ResponseEntity<SolicitudResponseDTO> asignarTecnico(
             @PathVariable long id,
-            @RequestBody AsignarTecnicoRequestDTO request) {
+            @RequestBody TecnicoRequestDTO request) {
 
-        Tecnico tecnico = tecnicoService.buscarPorId(request.getTecnicoId()).orElse(null);
+        Tecnico tecnico = tecnicoService.buscarPorDni(request.getDni()).orElse(null);
         if (tecnico == null) {
             return ResponseEntity.notFound().build();
         }
@@ -109,9 +109,9 @@ public class SolicitudController {
     @PutMapping("/{id}/estado")
     public ResponseEntity<SolicitudResponseDTO> cambiarEstado(
             @PathVariable long id,
-            @RequestBody CambiarEstadoRequestDTO request) {
+            @RequestBody TecnicoResponseDTO request) {
         try {
-            EstadoSolicitud nuevoEstado = EstadoSolicitud.valueOf(request.getEstado());
+            EstadoSolicitud nuevoEstado = EstadoSolicitud.valueOf(request.getEspecialidad()); // Reutilizamos el campo "especialidad" para recibir el nuevo estado
             Solicitud solicitud = solicitudService.cambiarEstado(id, nuevoEstado);
             if (solicitud == null) {
                 return ResponseEntity.notFound().build();

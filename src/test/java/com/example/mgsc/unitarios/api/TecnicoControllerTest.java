@@ -48,7 +48,7 @@ public class TecnicoControllerTest {
     @Test
     void listarTecnicosDebeRetornarOkYEstructuraJson() throws Exception {
         // Simulamos que el dominio interno devuelve un técnico
-        Tecnico t1 = new Tecnico(1L, "Juan", "Redes", true);
+        Tecnico t1 = new Tecnico(1L, "Juan", "12345", "Redes", true);
         when(tecnicoService.listar()).thenReturn(Arrays.asList(t1));
 
         // Hacemos la petición GET y verificamos la estructura JSON del DTO de salida

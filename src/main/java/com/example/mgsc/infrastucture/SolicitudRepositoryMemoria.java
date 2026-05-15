@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
+    private long idCounter = 1;
     private final List<Solicitud> solicitudes = new ArrayList<>();
     private final List<Solicitud> solicitudesPremium = new ArrayList<>();
 
@@ -23,6 +24,9 @@ public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
 
     @Override
     public void guardar(Solicitud solicitud) {
+        if (solicitud.getId() == -1) {
+            solicitud.setId(idCounter++);
+        }
         if (solicitud.getClienteAsignado().getTipo().name().equals("PREMIUM")) {
             solicitudesPremium.add(solicitud);
         } else {
@@ -65,13 +69,11 @@ public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
 
     @Override
     public Solicitud getProximaSolicitud() {
-        if(!solicitudesPremium.isEmpty()){
+        if (!solicitudesPremium.isEmpty()) {
             return solicitudesPremium.get(0); // No hay solicitudes
-        }
-        else if(!solicitudes.isEmpty()){
+        } else if (!solicitudes.isEmpty()) {
             return solicitudes.get(0); // No hay solicitudes
-        }
-        else{
+        } else {
             return null;
         }
     }

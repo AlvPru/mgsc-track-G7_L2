@@ -5,15 +5,17 @@ import com.example.mgsc.dominio.TipoCliente;
 public class ClienteResponseDTO {
     private long id;
     private String nombre;
+    private String dni;
     private String email;
     private TipoCliente tipo;
 
     public ClienteResponseDTO() {
     }
 
-    public ClienteResponseDTO(long id, String nombre, String email, TipoCliente tipo) {
+    public ClienteResponseDTO(long id, String nombre, String dni, String email, TipoCliente tipo) {
         this.id = id;
         this.nombre = nombre;
+        this.dni = dni;
         this.email = email;
         this.tipo = tipo;
     }
@@ -21,11 +23,9 @@ public class ClienteResponseDTO {
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
-
     public String getNombre() {
         return nombre;
     }
@@ -48,5 +48,11 @@ public class ClienteResponseDTO {
 
     public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
+    }
+    public String getDni() {
+        return dni;
+    }
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

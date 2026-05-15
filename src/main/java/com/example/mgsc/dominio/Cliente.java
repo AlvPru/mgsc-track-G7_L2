@@ -4,8 +4,8 @@ public class Cliente extends Persona {
     private String email;
     private TipoCliente tipo;
 
-    public Cliente(long id, String nombre, String email, TipoCliente tipo) {
-        super(id, nombre);
+    public Cliente(String nombre, String dni, String email, TipoCliente tipo) {
+        super(nombre, dni);
         this.email = email;
         this.tipo = tipo;
     }
@@ -22,6 +22,7 @@ public class Cliente extends Persona {
         return tipo;
     }
 
+
     public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
     }
@@ -37,4 +38,5 @@ public class Cliente extends Persona {
     public String getDescripcion() {
         return String.format("Cliente: %s, Email: %s, Tipo: %s", getNombre(), email, tipo);
     }
+
 }

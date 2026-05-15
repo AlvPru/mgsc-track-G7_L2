@@ -32,9 +32,9 @@ class SolicitudServiceTest {
 
     @Test
     void cuandoAsignaTecnicoActivoDebeGuardarSolicitudActualizada() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "67890", "Electricidad", true);
 
         when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
 
@@ -48,7 +48,7 @@ class SolicitudServiceTest {
 
        @Test
     void cuandoCambiarEstadoDebeGuardarSolicitudActualizada() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));

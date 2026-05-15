@@ -21,7 +21,7 @@ class SolicitudTest {
 
     @Test
     void testConstructor() {
-        Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         assertEquals("Reparar fuga", solicitud.getDescripcion());
@@ -34,8 +34,8 @@ class SolicitudTest {
 
     @Test
     void testSetAndGetTecnico() {
-        Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        Tecnico tecnico = new Tecnico(1, "Ana", "67890", "Electricidad", true);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         solicitud.setTecnico(tecnico);
@@ -44,7 +44,7 @@ class SolicitudTest {
 
     @Test
     void testSettersAndGetters() {
-        Cliente cliente = new Cliente(1, "Juan", "Perez", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         solicitud.setId(10);
@@ -56,7 +56,7 @@ class SolicitudTest {
         solicitud.setEstado(EstadoSolicitud.CERRADA);
         assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
 
-        Cliente nuevoCliente = new Cliente(2, "Maria", "Lopez", TipoCliente.PREMIUM);
+        Cliente nuevoCliente = new Cliente("Maria", "67890", "maria@email.com", TipoCliente.PREMIUM);
         solicitud.setClienteAsignado(nuevoCliente);
         assertEquals(nuevoCliente, solicitud.getClienteAsignado());
 
@@ -71,7 +71,7 @@ class SolicitudTest {
 
     @Test
     void cuandoReopenSolicitudCerradaDebeQuedarEnProceso() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
@@ -83,7 +83,7 @@ class SolicitudTest {
 
     @Test
     void cuandoReopenSolicitudNoClosedDebeLanzarExcepcion() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
@@ -93,7 +93,7 @@ class SolicitudTest {
 
     @Test
     void elHistorialDebeRegistrarTodosLosCambiosDeEstadoEnOrden() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente); // PENDIENTE
 
         solicitud.setEstado(EstadoSolicitud.EN_PROCESO);

@@ -15,8 +15,8 @@ public class TecnicoService {
         this.tecnicoRepository = tecnicoRepository;
     }
 
-    public void guardar(Tecnico tecnico) {
-        tecnicoRepository.guardar(tecnico);
+    public Tecnico guardar(Tecnico tecnico) {
+        return tecnicoRepository.guardar(tecnico);
     }
 
     public List<Tecnico> buscarActivo() {
@@ -27,7 +27,17 @@ public class TecnicoService {
         return tecnicoRepository.listar();
     }
 
-    public Optional<Tecnico> buscarPorId(long id) {
-        return tecnicoRepository.buscarPorId(id);
+    public Optional<Tecnico> buscarPorDni(String dni) {
+        return tecnicoRepository.buscarPorDni(dni);
+    }
+
+    public Tecnico crearTecnico(String nombre, String dni, String especialidad, boolean activo) {
+        Tecnico tecnico = new Tecnico(nombre, dni, especialidad, activo);
+        return tecnicoRepository.guardar(tecnico);
+    }
+
+    public Tecnico buscarPorIdOrThrow(long id) {
+        return tecnicoRepository.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tecnico no encontrado: " + id));
     }
 }

@@ -33,17 +33,18 @@ public class ClienteController {
     @PostMapping
     public ClienteResponseDTO crearCliente(@RequestBody ClienteRequestDTO request) {
         Cliente cliente = clienteService.crearCliente(
-                request.getId(),
                 request.getNombre(),
+                request.getDni(),
                 request.getEmail(),
                 request.getTipo());
         return toResponseDTO(cliente);
     }
- 
+
     private ClienteResponseDTO toResponseDTO(Cliente cliente) {
         return new ClienteResponseDTO(
                 cliente.getId(),
                 cliente.getNombre(),
+                cliente.getDni(),
                 cliente.getEmail(),
                 cliente.getTipo());
     }

@@ -57,10 +57,11 @@ class SolicitudControllerWebMvcTest {
 
     @BeforeEach
     void setUp() {
-        cliente = new Cliente(1, "Carlos", "carlos@email.com", TipoCliente.STANDARD);
+        cliente = new Cliente("Carlos", "12345", "carlos@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
         solicitud = new Solicitud("Avería en instalación", cliente);
-        tecnicoActivo = new Tecnico(1, "Juan", "Electricidad", true);
-        tecnicoInactivo = new Tecnico(2, "Maria", "Plomeria", false);
+        tecnicoActivo = new Tecnico(1, "Juan", "12345", "Electricidad", true);
+        tecnicoInactivo = new Tecnico(2, "Maria", "67890", "Plomeria", false);
     }
 
     // --- GET /api/solicitudes ---

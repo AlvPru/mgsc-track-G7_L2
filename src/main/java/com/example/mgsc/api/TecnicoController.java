@@ -1,7 +1,7 @@
 package com.example.mgsc.api;
 
-import com.example.mgsc.api.dto.TecnicoRequestDTO;
-import com.example.mgsc.api.dto.TecnicoResponseDTO;
+import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
+import com.example.mgsc.api.DTOs.TecnicoResponseDTO;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.service.TecnicoService;
 
@@ -24,60 +24,41 @@ public class TecnicoController {
         this.tecnicoService = tecnicoService;
     }
 
-    // --- ENDPOINTS (LOS CASOS DE USO) ---
-
-    // 1. Crear un técnico (Recibe DTO, devuelve DTO)
     @PostMapping
-    public ResponseEntity<TecnicoResponseDTO> crearTecnico(@Valid @RequestBody TecnicoRequestDTO requestDTO) {
-        // 1. Aduana de entrada: Convertir DTO a Entidad (Dominio)
-        Tecnico tecnicoNuevo = mapToEntity(requestDTO);
-        
-        // 2. Delegar en el servicio para que aplique reglas de negocio y guarde
-        tecnicoService.guardar(tecnicoNuevo);
-        
-        // 3. Aduana de salida: Convertir Entidad a DTO para devolver
-        TecnicoResponseDTO responseDTO = mapToResponseDTO(tecnicoNuevo);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    public TecnicoResponseDTO crearTecnico(@RequestBody TecnicoRequestDTO request) {
+        Tecnico tecnico = tecnicoService.crearTecnico(
+                request.getNombre(),
+                request.getDni(),
+                request.getEspecialidad(),
+                request.getEstado());
+        return toResponseDTO(tecnico);
     }
 
-    // 2. Listar todos los técnicos (Devuelve Lista de DTOs)
     @GetMapping
-    public ResponseEntity<List<TecnicoResponseDTO>> listarTecnicos() {
-        List<Tecnico> tecnicos = tecnicoService.listar();
-        
-        List<TecnicoResponseDTO> responseDTOs = tecnicos.stream()
-                .map(this::mapToResponseDTO)
+    public List<TecnicoResponseDTO> listarTecnicos() {
+        return tecnicoService.listar().stream()
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
-                
-        return ResponseEntity.ok(responseDTOs);
     }
 
-    // 3. Consultar solo los técnicos activos (Devuelve Lista de DTOs)
     @GetMapping("/activos")
-    public ResponseEntity<List<TecnicoResponseDTO>> listarTecnicosActivos() {
-        List<Tecnico> tecnicosActivos = tecnicoService.buscarActivo();
-        
-        List<TecnicoResponseDTO> responseDTOs = tecnicosActivos.stream()
-                .map(this::mapToResponseDTO)
+    public List<TecnicoResponseDTO> listarTecnicosActivos() {
+        return tecnicoService.buscarActivo().stream()
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
-                
-        return ResponseEntity.ok(responseDTOs);
     }
 
-    // --- MAPPERS (LA ADUANA) ---
-    // Métodos privados manuales para traducir entre capas sin usar librerías externas.
-
-    private Tecnico mapToEntity(TecnicoRequestDTO dto) {
-        // El ID será generado por la base de datos más adelante, de momento pasamos 0 o un valor temporal
-        return new Tecnico(0L, dto.getNombre(), dto.getEspecialidad(), dto.getActivo());
+    @GetMapping("/{id}")
+    public TecnicoResponseDTO obtenerTecnico(@PathVariable long id) {
+        return toResponseDTO(tecnicoService.buscarPorIdOrThrow(id));
     }
 
-    private TecnicoResponseDTO mapToResponseDTO(Tecnico entidad) {
+    private TecnicoResponseDTO toResponseDTO(Tecnico entidad) {
         return new TecnicoResponseDTO(
                 entidad.getId(),
                 entidad.getNombre(),
+                entidad.getDni(),
                 entidad.getEspecialidad(),
-                entidad.isActivo()
-        );
+                entidad.isActivo());
     }
 }

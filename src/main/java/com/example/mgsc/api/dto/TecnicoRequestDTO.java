@@ -52,4 +52,14 @@ public class TecnicoRequestDTO {
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
+
+    public boolean getEstado() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEstado'");
+    }
+
+    public String getDni() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDni'");
+    }
 }
