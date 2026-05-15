@@ -3,23 +3,22 @@ package com.example.mgsc.infrastucture;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.infrastucture.interfaces.SolicitudRepositoryPort;
 
+import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
-    private static SolicitudRepositoryMemoria instance;
     private final List<Solicitud> solicitudes = new ArrayList<>();
     private final List<Solicitud> solicitudesPremium = new ArrayList<>();
 
-    private SolicitudRepositoryMemoria() {
+    public SolicitudRepositoryMemoria() {
+        // Constructor público para inyección por Spring
     }
 
     public static SolicitudRepositoryMemoria getInstance() {
-        if (instance == null) {
-            instance = new SolicitudRepositoryMemoria();
-        }
-        return instance;
+        return new SolicitudRepositoryMemoria();
     }
 
     @Override
