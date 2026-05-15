@@ -1,8 +1,14 @@
 package com.example.mgsc.api.DTOs;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Datos necesarios para crear una solicitud")
 public class SolicitudRequestDTO {
 
+    @Schema(description = "Descripción del problema o incidencia", example = "Avería en instalación eléctrica")
     private String descripcion;
+
+    @Schema(description = "ID del cliente que realiza la solicitud", example = "1")
     private long clienteId;
 
     public SolicitudRequestDTO() {}
