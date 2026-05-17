@@ -32,13 +32,17 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ClienteResponseDTO crearCliente(@RequestBody ClienteRequestDTO request) {
-        Cliente cliente = clienteService.crearCliente(
-                request.getNombre(),
-                request.getDni(),
-                request.getEmail(),
-                request.getTipo());
-        return toResponseDTO(cliente);
+    public ResponseEntity<ClienteResponseDTO> crearCliente(@RequestBody ClienteRequestDTO request) {
+        try {
+            Cliente cliente = clienteService.crearCliente(
+                    request.getNombre(),
+                    request.getDni(),
+                    request.getEmail(),
+                    request.getTipo());
+            return ResponseEntity.ok(toResponseDTO(cliente));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/dni/{dni}")

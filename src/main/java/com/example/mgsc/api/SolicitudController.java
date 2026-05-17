@@ -44,10 +44,14 @@ public class SolicitudController {
     })
     @PostMapping
     public ResponseEntity<SolicitudResponseDTO> crear(@RequestBody SolicitudRequestDTO request) {
-        Cliente cliente = clienteService.buscarPorIdOrThrow(request.getClienteId());
-        Solicitud solicitud = new Solicitud(request.getDescripcion(), cliente);
-        solicitudService.guardar(solicitud);
-        return ResponseEntity.ok(SolicitudMapper.toDTO(solicitud));
+        try {
+            Cliente cliente = clienteService.buscarPorIdOrThrow(request.getClienteId());
+            Solicitud solicitud = new Solicitud(request.getDescripcion(), cliente);
+            solicitudService.guardar(solicitud);
+            return ResponseEntity.ok(SolicitudMapper.toDTO(solicitud));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(summary = "Listar solicitudes", description = "Devuelve todas las solicitudes registradas. Las de clientes premium aparecen primero")

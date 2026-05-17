@@ -17,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -38,9 +40,11 @@ class ClienteControllerTest {
                 .thenReturn(cliente);
 
         ClienteRequestDTO request = new ClienteRequestDTO("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
-        ClienteResponseDTO resultado = controlador.crearCliente(request);
+        ResponseEntity<ClienteResponseDTO> response = controlador.crearCliente(request);
+        ClienteResponseDTO resultado = response.getBody();
 
         verify(clienteService).crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        assertEquals(200, response.getStatusCode().value());
         assertNotNull(resultado);
         assertEquals(1, resultado.getId());
         assertEquals("Juan", resultado.getNombre());

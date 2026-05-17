@@ -25,12 +25,16 @@ public class TecnicoController {
 
     @PostMapping
     public ResponseEntity<TecnicoResponseDTO> crearTecnico(@RequestBody TecnicoRequestDTO request) {
-        Tecnico tecnico = tecnicoService.crearTecnico(
-                request.getNombre(),
-                request.getDni(),
-                request.getEspecialidad(),
-                request.getEstado());
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDTO(tecnico));
+        try {
+            Tecnico tecnico = tecnicoService.crearTecnico(
+                    request.getNombre(),
+                    request.getDni(),
+                    request.getEspecialidad(),
+                    request.getEstado());
+            return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDTO(tecnico));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping
