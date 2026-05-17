@@ -40,7 +40,7 @@ public class ClienteController {
                     request.getEmail(),
                     request.getTipo());
             return ResponseEntity.ok(toResponseDTO(cliente));
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

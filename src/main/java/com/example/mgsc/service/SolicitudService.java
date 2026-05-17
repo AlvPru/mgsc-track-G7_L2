@@ -63,6 +63,7 @@ public class SolicitudService {
             return -1;
         }
         solicitud.setEstado(EstadoSolicitud.CERRADA);
+        solicitud.setFechaCierre(java.time.LocalDateTime.now());
         return modificar(solicitud);
     }
 

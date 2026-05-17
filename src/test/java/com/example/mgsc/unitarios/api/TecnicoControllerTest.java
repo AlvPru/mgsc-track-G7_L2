@@ -46,7 +46,7 @@ public class TecnicoControllerTest {
         mockMvc.perform(post("/api/tecnicos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     @Test

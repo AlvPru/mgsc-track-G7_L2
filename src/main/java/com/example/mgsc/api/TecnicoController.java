@@ -31,8 +31,8 @@ public class TecnicoController {
                     request.getDni(),
                     request.getEspecialidad(),
                     request.getEstado());
-            return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDTO(tecnico));
-        } catch (IllegalArgumentException e) {
+            return ResponseEntity.ok(toResponseDTO(tecnico));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
