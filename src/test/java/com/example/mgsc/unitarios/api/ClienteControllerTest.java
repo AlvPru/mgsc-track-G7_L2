@@ -40,8 +40,8 @@ class ClienteControllerTest {
                 .thenReturn(cliente);
 
         ClienteRequestDTO request = new ClienteRequestDTO("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
-        ResponseEntity<ClienteResponseDTO> response = controlador.crearCliente(request);
-        ClienteResponseDTO resultado = response.getBody();
+        ResponseEntity<?> response = controlador.crearCliente(request);
+        ClienteResponseDTO resultado = (ClienteResponseDTO) response.getBody();
 
         verify(clienteService).crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         assertEquals(200, response.getStatusCode().value());

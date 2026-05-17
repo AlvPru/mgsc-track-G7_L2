@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,7 +33,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> crearCliente(@RequestBody ClienteRequestDTO request) {
+    public ResponseEntity<?> crearCliente(@RequestBody ClienteRequestDTO request) {
         try {
             Cliente cliente = clienteService.crearCliente(
                     request.getNombre(),
@@ -41,7 +42,7 @@ public class ClienteController {
                     request.getTipo());
             return ResponseEntity.ok(toResponseDTO(cliente));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
