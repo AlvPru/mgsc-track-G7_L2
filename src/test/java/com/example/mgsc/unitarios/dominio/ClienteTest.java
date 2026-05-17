@@ -61,14 +61,14 @@ class ClienteTest {
 
     @Test
     void setIdDebeActualizarId() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD);
         cliente.setId(99);
         assertEquals(99, cliente.getId());
     }
 
     @Test
     void setNombreDebeActualizarNombre() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD);
         cliente.setNombre("Pedro");
         assertEquals("Pedro", cliente.getNombre());
     }

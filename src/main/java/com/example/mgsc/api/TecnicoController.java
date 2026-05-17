@@ -5,7 +5,6 @@ import com.example.mgsc.api.DTOs.TecnicoResponseDTO;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.service.TecnicoService;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +24,13 @@ public class TecnicoController {
     }
 
     @PostMapping
-    public TecnicoResponseDTO crearTecnico(@RequestBody TecnicoRequestDTO request) {
+    public ResponseEntity<TecnicoResponseDTO> crearTecnico(@RequestBody TecnicoRequestDTO request) {
         Tecnico tecnico = tecnicoService.crearTecnico(
                 request.getNombre(),
                 request.getDni(),
                 request.getEspecialidad(),
                 request.getEstado());
-        return toResponseDTO(tecnico);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDTO(tecnico));
     }
 
     @GetMapping

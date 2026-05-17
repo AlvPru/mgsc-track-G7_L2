@@ -1,6 +1,6 @@
 package com.example.mgsc.unitarios.api;
 
-import com.example.mgsc.api.DTOs.AsignarTecnicoRequestDTO;
+import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudResponseDTO;
 import com.example.mgsc.api.SolicitudController;
 import com.example.mgsc.dominio.Cliente;
@@ -54,10 +54,10 @@ class SolicituControlerTest {
 
     @Test
     void testAsignacionTecnicoInactivoDevuelveBadRequest() {
-        AsignarTecnicoRequestDTO dto = new AsignarTecnicoRequestDTO();
-        dto.setTecnicoId(2L);
+        TecnicoRequestDTO dto = new TecnicoRequestDTO();
+        dto.setDni("67890");
 
-        when(tecnicoService.buscarPorId(2L)).thenReturn(Optional.of(tecnicoInactivo));
+        when(tecnicoService.buscarPorDni("67890")).thenReturn(Optional.of(tecnicoInactivo));
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoInactivo))).thenReturn(-1);
 
         ResponseEntity<SolicitudResponseDTO> response = solicitudController.asignarTecnico(solicitud1.getId(), dto);
@@ -70,10 +70,10 @@ class SolicituControlerTest {
         solicitud1.setEstado(EstadoSolicitud.EN_PROCESO);
         solicitud1.setTecnico(tecnicoActivo);
 
-        AsignarTecnicoRequestDTO dto = new AsignarTecnicoRequestDTO();
-        dto.setTecnicoId(1L);
+        TecnicoRequestDTO dto = new TecnicoRequestDTO();
+        dto.setDni("12345");
 
-        when(tecnicoService.buscarPorId(1L)).thenReturn(Optional.of(tecnicoActivo));
+        when(tecnicoService.buscarPorDni("12345")).thenReturn(Optional.of(tecnicoActivo));
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
         when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud1));
 

@@ -1,7 +1,7 @@
 package com.example.mgsc.api;
 
 import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
-import com.example.mgsc.api.DTOs.TecnicoResponseDTO;
+import com.example.mgsc.api.DTOs.CambiarEstadoRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudResponseDTO;
 import com.example.mgsc.dominio.Cliente;
@@ -109,9 +109,9 @@ public class SolicitudController {
     @PutMapping("/{id}/estado")
     public ResponseEntity<SolicitudResponseDTO> cambiarEstado(
             @PathVariable long id,
-            @RequestBody TecnicoResponseDTO request) {
+            @RequestBody CambiarEstadoRequestDTO request) {
         try {
-            EstadoSolicitud nuevoEstado = EstadoSolicitud.valueOf(request.getEspecialidad()); // Reutilizamos el campo "especialidad" para recibir el nuevo estado
+            EstadoSolicitud nuevoEstado = EstadoSolicitud.valueOf(request.getEstado());
             Solicitud solicitud = solicitudService.cambiarEstado(id, nuevoEstado);
             if (solicitud == null) {
                 return ResponseEntity.notFound().build();

@@ -1,7 +1,7 @@
 package com.example.mgsc.unitarios.api;
 
-import com.example.mgsc.api.DTOs.AsignarTecnicoRequestDTO;
 import com.example.mgsc.api.DTOs.CambiarEstadoRequestDTO;
+import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudRequestDTO;
 import com.example.mgsc.api.SolicitudController;
 import com.example.mgsc.dominio.Cliente;
@@ -122,12 +122,12 @@ class SolicitudControllerWebMvcTest {
         solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
         solicitud.setTecnico(tecnicoActivo);
 
-        when(tecnicoService.buscarPorId(1L)).thenReturn(Optional.of(tecnicoActivo));
+        when(tecnicoService.buscarPorDni("12345")).thenReturn(Optional.of(tecnicoActivo));
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
         when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud));
 
-        AsignarTecnicoRequestDTO dto = new AsignarTecnicoRequestDTO();
-        dto.setTecnicoId(1L);
+        TecnicoRequestDTO dto = new TecnicoRequestDTO();
+        dto.setDni("12345");
 
         mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -138,11 +138,11 @@ class SolicitudControllerWebMvcTest {
 
     @Test
     void asignarTecnicoInactivoDevuelveBadRequest() throws Exception {
-        when(tecnicoService.buscarPorId(2L)).thenReturn(Optional.of(tecnicoInactivo));
+        when(tecnicoService.buscarPorDni("67890")).thenReturn(Optional.of(tecnicoInactivo));
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoInactivo))).thenReturn(-1);
 
-        AsignarTecnicoRequestDTO dto = new AsignarTecnicoRequestDTO();
-        dto.setTecnicoId(2L);
+        TecnicoRequestDTO dto = new TecnicoRequestDTO();
+        dto.setDni("67890");
 
         mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico")
                         .contentType(MediaType.APPLICATION_JSON)

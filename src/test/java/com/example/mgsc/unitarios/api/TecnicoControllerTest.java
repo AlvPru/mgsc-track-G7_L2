@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -29,16 +31,18 @@ public class TecnicoControllerTest {
 
     @Test
     void crearTecnicoDebeRetornarCreated() throws Exception {
-        // Simulamos el DTO de entrada en formato JSON 
+        Tecnico tecnico = new Tecnico(1L, "Juan", "12345", "Redes", true);
+        when(tecnicoService.crearTecnico(any(), any(), any(), anyBoolean())).thenReturn(tecnico);
+
         String requestJson = """
             {
                 "nombre": "Juan",
+                "dni": "12345",
                 "especialidad": "Redes",
                 "activo": true
             }
             """;
 
-        // Simulamos un POST y verificamos que el código HTTP devuelto es 201
         mockMvc.perform(post("/api/tecnicos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))

@@ -9,4 +9,5 @@ public interface ClienteRepositoryPort {
     Optional<Cliente> buscarPorId(long id);
     List<Cliente> listar();
     boolean existe(String dni);
+    boolean existePorEmail(String email);
 }

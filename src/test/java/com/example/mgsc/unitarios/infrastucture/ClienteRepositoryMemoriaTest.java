@@ -16,7 +16,7 @@ class ClienteRepositoryMemoriaTest {
     @Test
     void guardarYListarCliente() {
         ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD);
 
         repo.guardar(cliente);
         List<Cliente> lista = repo.listar();
@@ -28,7 +28,8 @@ class ClienteRepositoryMemoriaTest {
     @Test
     void buscarPorIdExistenteDevuelveCliente() {
         ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
-        Cliente cliente = new Cliente(42, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        Cliente cliente = new Cliente("Ana", "22222", "ana@email.com", TipoCliente.PREMIUM);
+        cliente.setId(42);
         repo.guardar(cliente);
 
         Optional<Cliente> resultado = repo.buscarPorId(42);
@@ -49,7 +50,7 @@ class ClienteRepositoryMemoriaTest {
     @Test
     void existePorEmailDevuelveTrueCuandoExiste() {
         ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
-        repo.guardar(new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD));
+        repo.guardar(new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD));
 
         assertTrue(repo.existePorEmail("juan@email.com"));
     }
