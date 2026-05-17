@@ -1,9 +1,7 @@
 package com.example.mgsc.unitarios.api;
 
-import com.example.mgsc.api.DTOs.CambiarEstadoRequestDTO;
-import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
-import com.example.mgsc.api.DTOs.SolicitudRequestDTO;
 import com.example.mgsc.api.SolicitudController;
+import com.example.mgsc.api.DTOs.SolicitudRequestDTO;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.EstadoSolicitud;
 import com.example.mgsc.dominio.Solicitud;
@@ -115,10 +113,35 @@ class SolicitudControllerWebMvcTest {
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"));
     }
 
-    // --- PUT /api/solicitudes/{id}/tecnico ---
+    // --- PUT /api/solicitudes/{id}/tecnico/{tecnicoId} ---
 
     @Test
-    void asignarTecnicoActivoDevuelveOk() throws Exception {
+    void asignarTecnicoPorIdActivoDevuelveOk() throws Exception {
+        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
+        solicitud.setTecnico(tecnicoActivo);
+
+        when(tecnicoService.buscarPorId(1L)).thenReturn(Optional.of(tecnicoActivo));
+        when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
+        when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud));
+
+        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.estado").value("EN_PROCESO"));
+    }
+
+    @Test
+    void asignarTecnicoPorIdInactivoDevuelveBadRequest() throws Exception {
+        when(tecnicoService.buscarPorId(2L)).thenReturn(Optional.of(tecnicoInactivo));
+        when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoInactivo))).thenReturn(-1);
+
+        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico/2"))
+                .andExpect(status().isBadRequest());
+    }
+
+    // --- PUT /api/solicitudes/{id}/tecnico/dni/{dni} ---
+
+    @Test
+    void asignarTecnicoPorDniActivoDevuelveOk() throws Exception {
         solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
         solicitud.setTecnico(tecnicoActivo);
 
@@ -126,56 +149,29 @@ class SolicitudControllerWebMvcTest {
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
         when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud));
 
-        TecnicoRequestDTO dto = new TecnicoRequestDTO();
-        dto.setDni("12345");
-
-        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico/dni/12345"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("EN_PROCESO"));
-    }
-
-    @Test
-    void asignarTecnicoInactivoDevuelveBadRequest() throws Exception {
-        when(tecnicoService.buscarPorDni("67890")).thenReturn(Optional.of(tecnicoInactivo));
-        when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoInactivo))).thenReturn(-1);
-
-        TecnicoRequestDTO dto = new TecnicoRequestDTO();
-        dto.setDni("67890");
-
-        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/tecnico")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
     }
 
     // --- PUT /api/solicitudes/{id}/estado ---
 
     @Test
-    void cambiarEstadoValidoDevuelveOk() throws Exception {
-        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
-        when(solicitudService.cambiarEstado(anyLong(), eq(EstadoSolicitud.EN_PROCESO)))
-                .thenReturn(solicitud);
+    void cerrarSolicitudDevuelveOk() throws Exception {
+        solicitud.setEstado(EstadoSolicitud.CERRADA);
+        when(solicitudService.cerrarSolicitud(solicitud.getId())).thenReturn(0);
+        when(solicitudService.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
 
-        CambiarEstadoRequestDTO dto = new CambiarEstadoRequestDTO();
-        dto.setEstado("EN_PROCESO");
-
-        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/estado")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/estado"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.estado").value("EN_PROCESO"));
+                .andExpect(jsonPath("$.estado").value("CERRADA"));
     }
 
     @Test
-    void cambiarEstadoInvalidoDevuelveBadRequest() throws Exception {
-        CambiarEstadoRequestDTO dto = new CambiarEstadoRequestDTO();
-        dto.setEstado("ESTADO_INEXISTENTE");
+    void cerrarSolicitudEnEstadoIncorrectoDevuelveBadRequest() throws Exception {
+        when(solicitudService.cerrarSolicitud(solicitud.getId())).thenReturn(-1);
 
-        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/estado")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        mockMvc.perform(put("/api/solicitudes/" + solicitud.getId() + "/estado"))
                 .andExpect(status().isBadRequest());
     }
 

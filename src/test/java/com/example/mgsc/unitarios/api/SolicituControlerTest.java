@@ -1,6 +1,5 @@
 package com.example.mgsc.unitarios.api;
 
-import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudResponseDTO;
 import com.example.mgsc.api.SolicitudController;
 import com.example.mgsc.dominio.Cliente;
@@ -53,31 +52,42 @@ class SolicituControlerTest {
     }
 
     @Test
-    void testAsignacionTecnicoInactivoDevuelveBadRequest() {
-        TecnicoRequestDTO dto = new TecnicoRequestDTO();
-        dto.setDni("67890");
-
-        when(tecnicoService.buscarPorDni("67890")).thenReturn(Optional.of(tecnicoInactivo));
+    void testAsignacionTecnicoInactivoPorIdDevuelveBadRequest() {
+        when(tecnicoService.buscarPorId(2L)).thenReturn(Optional.of(tecnicoInactivo));
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoInactivo))).thenReturn(-1);
 
-        ResponseEntity<SolicitudResponseDTO> response = solicitudController.asignarTecnico(solicitud1.getId(), dto);
+        ResponseEntity<SolicitudResponseDTO> response =
+                solicitudController.asignarTecnicoPorId(solicitud1.getId(), 2L);
 
         assertEquals(400, response.getStatusCode().value());
     }
 
     @Test
-    void testAsignacionTecnicoActivoDevuelveOk() {
+    void testAsignacionTecnicoActivoPorIdDevuelveOk() {
         solicitud1.setEstado(EstadoSolicitud.EN_PROCESO);
         solicitud1.setTecnico(tecnicoActivo);
 
-        TecnicoRequestDTO dto = new TecnicoRequestDTO();
-        dto.setDni("12345");
+        when(tecnicoService.buscarPorId(1L)).thenReturn(Optional.of(tecnicoActivo));
+        when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
+        when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud1));
+
+        ResponseEntity<SolicitudResponseDTO> response =
+                solicitudController.asignarTecnicoPorId(solicitud1.getId(), 1L);
+
+        assertEquals(200, response.getStatusCode().value());
+    }
+
+    @Test
+    void testAsignacionTecnicoActivoPorDniDevuelveOk() {
+        solicitud1.setEstado(EstadoSolicitud.EN_PROCESO);
+        solicitud1.setTecnico(tecnicoActivo);
 
         when(tecnicoService.buscarPorDni("12345")).thenReturn(Optional.of(tecnicoActivo));
         when(solicitudService.asignarTecnico(anyLong(), eq(tecnicoActivo))).thenReturn(0);
         when(solicitudService.buscarPorId(anyLong())).thenReturn(Optional.of(solicitud1));
 
-        ResponseEntity<SolicitudResponseDTO> response = solicitudController.asignarTecnico(solicitud1.getId(), dto);
+        ResponseEntity<SolicitudResponseDTO> response =
+                solicitudController.asignarTecnicoPorDni(solicitud1.getId(), "12345");
 
         assertEquals(200, response.getStatusCode().value());
     }
@@ -99,6 +109,17 @@ class SolicituControlerTest {
         ResponseEntity<SolicitudResponseDTO> response = solicitudController.consultar(99L);
 
         assertEquals(404, response.getStatusCode().value());
+    }
+
+    @Test
+    void testCerrarSolicitudDevuelveOk() {
+        solicitud1.setEstado(EstadoSolicitud.CERRADA);
+        when(solicitudService.cerrarSolicitud(solicitud1.getId())).thenReturn(0);
+        when(solicitudService.buscarPorId(solicitud1.getId())).thenReturn(Optional.of(solicitud1));
+
+        ResponseEntity<SolicitudResponseDTO> response = solicitudController.cerrar(solicitud1.getId());
+
+        assertEquals(200, response.getStatusCode().value());
     }
 
     @Test

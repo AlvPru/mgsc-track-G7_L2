@@ -33,6 +33,9 @@ public class ClienteService {
     }
 
     public Cliente crearCliente(String nombre, String dni, String email, TipoCliente tipo) {
+        if (clienteRepository.existe(dni)) {
+            throw new IllegalArgumentException("Ya existe un cliente con DNI: " + dni);
+        }
         if (clienteRepository.existePorEmail(email)) {
             throw new IllegalArgumentException("Ya existe un cliente con email: " + email);
         }

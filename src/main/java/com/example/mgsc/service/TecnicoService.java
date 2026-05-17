@@ -32,8 +32,15 @@ public class TecnicoService {
     }
 
     public Tecnico crearTecnico(String nombre, String dni, String especialidad, boolean activo) {
+        if (tecnicoRepository.buscarPorDni(dni).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un tecnico con DNI: " + dni);
+        }
         Tecnico tecnico = new Tecnico(nombre, dni, especialidad, activo);
         return tecnicoRepository.guardar(tecnico);
+    }
+
+    public Optional<Tecnico> buscarPorId(long id) {
+        return tecnicoRepository.buscarPorId(id);
     }
 
     public Tecnico buscarPorIdOrThrow(long id) {

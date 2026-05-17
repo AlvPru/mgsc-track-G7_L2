@@ -1,11 +1,8 @@
 package com.example.mgsc.api;
 
-import com.example.mgsc.api.DTOs.TecnicoRequestDTO;
-import com.example.mgsc.api.DTOs.CambiarEstadoRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudRequestDTO;
 import com.example.mgsc.api.DTOs.SolicitudResponseDTO;
 import com.example.mgsc.dominio.Cliente;
-import com.example.mgsc.dominio.EstadoSolicitud;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.service.ClienteService;
@@ -43,7 +40,6 @@ public class SolicitudController {
     @Operation(summary = "Crear solicitud", description = "Crea una nueva solicitud de servicio para un cliente existente")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Solicitud creada correctamente"),
-        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos"),
         @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
     @PostMapping
@@ -76,50 +72,57 @@ public class SolicitudController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Asignar técnico", description = "Asigna un técnico activo a una solicitud. El técnico debe estar activo y la solicitud debe existir")
+    @Operation(summary = "Asignar técnico por ID", description = "Asigna un técnico activo a una solicitud usando el ID del técnico")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Técnico asignado correctamente"),
-        @ApiResponse(responseCode = "400", description = "El técnico está inactivo o la solicitud no existe"),
-        @ApiResponse(responseCode = "404", description = "Técnico no encontrado")
+        @ApiResponse(responseCode = "400", description = "El técnico está inactivo"),
+        @ApiResponse(responseCode = "404", description = "Técnico o solicitud no encontrada")
     })
-    @PutMapping("/{id}/tecnico")
-    public ResponseEntity<SolicitudResponseDTO> asignarTecnico(
+    @PutMapping("/{id}/tecnico/{tecnicoId}")
+    public ResponseEntity<SolicitudResponseDTO> asignarTecnicoPorId(
             @PathVariable long id,
-            @RequestBody TecnicoRequestDTO request) {
+            @PathVariable long tecnicoId) {
 
-        Tecnico tecnico = tecnicoService.buscarPorDni(request.getDni()).orElse(null);
+        Tecnico tecnico = tecnicoService.buscarPorId(tecnicoId).orElse(null);
         if (tecnico == null) {
             return ResponseEntity.notFound().build();
         }
-        int resultado = solicitudService.asignarTecnico(id, tecnico);
-        if (resultado < 0) {
+        return asignar(id, tecnico);
+    }
+
+    @Operation(summary = "Asignar técnico por DNI", description = "Asigna un técnico activo a una solicitud usando el DNI del técnico")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Técnico asignado correctamente"),
+        @ApiResponse(responseCode = "400", description = "El técnico está inactivo"),
+        @ApiResponse(responseCode = "404", description = "Técnico o solicitud no encontrada")
+    })
+    @PutMapping("/{id}/tecnico/dni/{dni}")
+    public ResponseEntity<SolicitudResponseDTO> asignarTecnicoPorDni(
+            @PathVariable long id,
+            @PathVariable String dni) {
+
+        Tecnico tecnico = tecnicoService.buscarPorDni(dni).orElse(null);
+        if (tecnico == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return asignar(id, tecnico);
+    }
+
+    @Operation(summary = "Cerrar solicitud", description = "Cierra una solicitud que está en estado EN_PROCESO")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Solicitud cerrada correctamente"),
+        @ApiResponse(responseCode = "400", description = "La solicitud no está en estado EN_PROCESO"),
+        @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
+    })
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<SolicitudResponseDTO> cerrar(@PathVariable long id) {
+        Integer resultado = solicitudService.cerrarSolicitud(id);
+        if (resultado == null || resultado < 0) {
             return ResponseEntity.badRequest().build();
         }
         return solicitudService.buscarPorId(id)
                 .map(s -> ResponseEntity.ok(SolicitudMapper.toDTO(s)))
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @Operation(summary = "Cambiar estado", description = "Actualiza el estado de una solicitud. Valores válidos: PENDIENTE, EN_PROCESO, CERRADA")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Estado actualizado correctamente"),
-        @ApiResponse(responseCode = "400", description = "Estado inválido"),
-        @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
-    })
-    @PutMapping("/{id}/estado")
-    public ResponseEntity<SolicitudResponseDTO> cambiarEstado(
-            @PathVariable long id,
-            @RequestBody CambiarEstadoRequestDTO request) {
-        try {
-            EstadoSolicitud nuevoEstado = EstadoSolicitud.valueOf(request.getEstado());
-            Solicitud solicitud = solicitudService.cambiarEstado(id, nuevoEstado);
-            if (solicitud == null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(SolicitudMapper.toDTO(solicitud));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @Operation(summary = "Reabrir solicitud", description = "Reabre una solicitud que estaba en estado CERRADA. Vuelve al estado EN_PROCESO")
@@ -139,5 +142,16 @@ public class SolicitudController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    // ── helper interno ──────────────────────────────────────────────────────
+    private ResponseEntity<SolicitudResponseDTO> asignar(long idSolicitud, Tecnico tecnico) {
+        int resultado = solicitudService.asignarTecnico(idSolicitud, tecnico);
+        if (resultado < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        return solicitudService.buscarPorId(idSolicitud)
+                .map(s -> ResponseEntity.ok(SolicitudMapper.toDTO(s)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
