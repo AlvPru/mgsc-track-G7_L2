@@ -45,4 +45,9 @@ public class ClienteRepositoryMemoria implements ClienteRepositoryPort {
     public boolean existePorEmail(String email) {
         return clientes.stream().anyMatch(c -> c.getEmail().equals(email));
     }
+
+    @Override
+    public Optional<Cliente> buscarPorDni(String dni) {
+        return clientes.stream().filter(c -> c.getDni().equals(dni)).findFirst();
+    }
 }

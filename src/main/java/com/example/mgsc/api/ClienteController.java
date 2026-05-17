@@ -4,6 +4,7 @@ import com.example.mgsc.api.DTOs.ClienteRequestDTO;
 import com.example.mgsc.api.DTOs.ClienteResponseDTO;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.service.ClienteService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,13 @@ public class ClienteController {
                 request.getEmail(),
                 request.getTipo());
         return toResponseDTO(cliente);
+    }
+
+    @GetMapping("/dni/{dni}")
+    public ResponseEntity<ClienteResponseDTO> buscarPorDni(@PathVariable String dni) {
+        return clienteService.buscarPorDni(dni)
+                .map(c -> ResponseEntity.ok(toResponseDTO(c)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private ClienteResponseDTO toResponseDTO(Cliente cliente) {

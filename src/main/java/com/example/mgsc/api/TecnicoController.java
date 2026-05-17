@@ -52,6 +52,13 @@ public class TecnicoController {
         return toResponseDTO(tecnicoService.buscarPorIdOrThrow(id));
     }
 
+    @GetMapping("/dni/{dni}")
+    public ResponseEntity<TecnicoResponseDTO> buscarPorDni(@PathVariable String dni) {
+        return tecnicoService.buscarPorDni(dni)
+                .map(t -> ResponseEntity.ok(toResponseDTO(t)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     private TecnicoResponseDTO toResponseDTO(Tecnico entidad) {
         return new TecnicoResponseDTO(
                 entidad.getId(),

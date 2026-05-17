@@ -10,4 +10,5 @@ public interface ClienteRepositoryPort {
     List<Cliente> listar();
     boolean existe(String dni);
     boolean existePorEmail(String email);
+    Optional<Cliente> buscarPorDni(String dni);
 }

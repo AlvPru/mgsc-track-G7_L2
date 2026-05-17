@@ -45,4 +45,8 @@ public class ClienteService {
         return clienteRepository.buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + id));
     }
+
+    public Optional<Cliente> buscarPorDni(String dni) {
+        return clienteRepository.buscarPorDni(dni);
+    }
 }
