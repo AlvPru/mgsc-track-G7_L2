@@ -1,7 +1,7 @@
 DTO Cliente
 
 - Se creó un `ClienteRequestDTO` y un `ClienteResponseDTO` para separar la entrada y la salida de la API.
-- `ClienteRequestDTO` recibe los datos de la petición `POST` y contiene `id`, `nombre`, `email` y `tipo`.
+- `ClienteRequestDTO` recibe los datos de la petición `POST` y contiene `nombre`, `email` y `tipo`.
 - `ClienteResponseDTO` devuelve la información del cliente y también contiene `id`, `nombre`, `email` y `tipo`.
 - Se añadió un constructor sin argumentos en ambos DTOs para que Spring/Jackson puedan deserializar correctamente el JSON.
 - El `ClienteController` mapea el dominio `Cliente` al DTO de respuesta antes de devolverlo, evitando exponer la entidad de dominio directamente.
