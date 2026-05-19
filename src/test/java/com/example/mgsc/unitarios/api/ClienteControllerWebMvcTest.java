@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -89,5 +90,18 @@ class ClienteControllerWebMvcTest {
                 .andExpect(jsonPath("$.nombre").value("Pedro"))
                 .andExpect(jsonPath("$.email").value("pedro@email.com"))
                 .andExpect(jsonPath("$.tipo").value("PREMIUM"));
+    }
+
+    @Test
+    void buscarClientePorDniDevuelveDTO() throws Exception {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
+        when(clienteService.buscarPorDni("12345")).thenReturn(Optional.of(cliente));
+
+        mockMvc.perform(get("/api/clientes/dni/12345"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nombre").value("Juan"))
+                .andExpect(jsonPath("$.dni").value("12345"));
     }
 }

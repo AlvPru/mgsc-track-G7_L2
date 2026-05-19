@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -51,14 +52,45 @@ public class TecnicoControllerTest {
 
     @Test
     void listarTecnicosDebeRetornarOkYEstructuraJson() throws Exception {
-        // Simulamos que el dominio interno devuelve un técnico
         Tecnico t1 = new Tecnico(1L, "Juan", "12345", "Redes", true);
         when(tecnicoService.listar()).thenReturn(Arrays.asList(t1));
 
-        // Hacemos la petición GET y verificamos la estructura JSON del DTO de salida
         mockMvc.perform(get("/api/tecnicos"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nombre").value("Juan"))
                 .andExpect(jsonPath("$[0].especialidad").value("Redes"));
+    }
+
+    @Test
+    void listarTecnicosActivosDebeRetornarOk() throws Exception {
+        Tecnico t1 = new Tecnico(1L, "Ana", "67890", "Software", true);
+        when(tecnicoService.buscarActivo()).thenReturn(Arrays.asList(t1));
+
+        mockMvc.perform(get("/api/tecnicos/activos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nombre").value("Ana"))
+                .andExpect(jsonPath("$[0].especialidad").value("Software"));
+    }
+
+    @Test
+    void obtenerTecnicoPorIdDebeRetornarDTO() throws Exception {
+        Tecnico t1 = new Tecnico(1L, "Juan", "12345", "Redes", true);
+        when(tecnicoService.buscarPorIdOrThrow(1L)).thenReturn(t1);
+
+        mockMvc.perform(get("/api/tecnicos/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Juan"))
+                .andExpect(jsonPath("$.especialidad").value("Redes"));
+    }
+
+    @Test
+    void buscarTecnicoPorDniDebeRetornarDTO() throws Exception {
+        Tecnico t1 = new Tecnico(1L, "Juan", "12345", "Redes", true);
+        when(tecnicoService.buscarPorDni("12345")).thenReturn(Optional.of(t1));
+
+        mockMvc.perform(get("/api/tecnicos/dni/12345"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Juan"))
+                .andExpect(jsonPath("$.especialidad").value("Redes"));
     }
 }

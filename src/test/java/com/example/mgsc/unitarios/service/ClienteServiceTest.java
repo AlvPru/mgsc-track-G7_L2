@@ -86,4 +86,25 @@ class ClienteServiceTest {
         assertThrows(IllegalArgumentException.class, () ->
             servicio.buscarPorIdOrThrow(99));
     }
+
+    @Test
+    void cuandoCrearClienteConDniDuplicadoLanzaExcepcion() {
+        when(repositorio.existe("12345")).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () ->
+            servicio.crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD));
+
+        verify(repositorio, never()).guardar(any());
+    }
+
+    @Test
+    void buscarPorDniDebeDelegarAlRepositorio() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        when(repositorio.buscarPorDni("12345")).thenReturn(Optional.of(cliente));
+
+        Optional<Cliente> resultado = servicio.buscarPorDni("12345");
+
+        assertTrue(resultado.isPresent());
+        assertEquals("Juan", resultado.get().getNombre());
+    }
 }

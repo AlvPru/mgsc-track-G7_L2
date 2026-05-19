@@ -2,57 +2,22 @@ package com.example.mgsc.api.DTOs;
 
 import com.example.mgsc.dominio.TipoCliente;
 
-public class ClienteResponseDTO {
-    private long id;
-    private String nombre;
-    private String dni;
+public class ClienteResponseDTO extends PersonaResponseDTO {
     private String email;
     private TipoCliente tipo;
 
     public ClienteResponseDTO() {
+        super();
     }
 
     public ClienteResponseDTO(long id, String nombre, String dni, String email, TipoCliente tipo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.dni = dni;
+        super(id, nombre, dni);
         this.email = email;
         this.tipo = tipo;
     }
 
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public TipoCliente getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoCliente tipo) {
-        this.tipo = tipo;
-    }
-    public String getDni() {
-        return dni;
-    }
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public TipoCliente getTipo() { return tipo; }
+    public void setTipo(TipoCliente tipo) { this.tipo = tipo; }
 }
