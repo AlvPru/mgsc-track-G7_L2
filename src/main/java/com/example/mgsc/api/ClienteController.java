@@ -33,17 +33,16 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearCliente(@RequestBody ClienteRequestDTO request) {
+    public ClienteResponseDTO crearCliente(@RequestBody ClienteRequestDTO request) {
         try {
             Cliente cliente = clienteService.crearCliente(
                     request.getNombre(),
                     request.getDni(),
                     request.getEmail(),
                     request.getTipo());
-            return ResponseEntity.ok(toResponseDTO(cliente));
+            return toResponseDTO(cliente);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
