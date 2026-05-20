@@ -41,8 +41,9 @@ public class ClienteController {
                     request.getEmail(),
                     request.getTipo());
             return ResponseEntity.ok(toResponseDTO(cliente));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 

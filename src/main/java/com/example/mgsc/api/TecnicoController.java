@@ -32,8 +32,9 @@ public class TecnicoController {
                     request.getEspecialidad(),
                     request.getEstado());
             return ResponseEntity.ok(toResponseDTO(tecnico));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 
