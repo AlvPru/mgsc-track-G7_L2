@@ -40,16 +40,14 @@ class ClienteControllerTest {
                 .thenReturn(cliente);
 
         ClienteRequestDTO request = new ClienteRequestDTO("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
-        ResponseEntity<?> response = controlador.crearCliente(request);
-        ClienteResponseDTO resultado = (ClienteResponseDTO) response.getBody();
+        ClienteResponseDTO response = controlador.crearCliente(request);
 
         verify(clienteService).crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
-        assertEquals(200, response.getStatusCode().value());
-        assertNotNull(resultado);
-        assertEquals(1, resultado.getId());
-        assertEquals("Juan", resultado.getNombre());
-        assertEquals("juan@email.com", resultado.getEmail());
-        assertEquals(TipoCliente.STANDARD, resultado.getTipo());
+        assertNotNull(response);
+        assertEquals(1, response.getId());
+        assertEquals("Juan", response.getNombre());
+        assertEquals("juan@email.com", response.getEmail());
+        assertEquals(TipoCliente.STANDARD, response.getTipo());
     }
 
     @Test
