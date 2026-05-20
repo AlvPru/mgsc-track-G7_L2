@@ -17,6 +17,7 @@ public class Solicitud {
     private final List<CambioEstado> historial = new ArrayList<>();
 
     public Solicitud(String descripcion, Cliente cliente) {
+        id = -1;
         this.descripcion = descripcion;
         this.clienteAsignado = cliente;
         this.tecnico = null;

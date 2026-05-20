@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,13 +29,13 @@ class SolicitudServiceTest {
     @InjectMocks
     private SolicitudService servicio;
 
-    // --- Paso 3 del PDF: caso positivo de asignarTecnico ---
+    // ── asignarTecnico ──────────────────────────────────────────────────────
 
     @Test
     void cuandoAsignaTecnicoActivoDebeGuardarSolicitudActualizada() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "67890", "Electricidad", true);
 
         when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
 
@@ -44,11 +45,35 @@ class SolicitudServiceTest {
         assertEquals(EstadoSolicitud.EN_PROCESO, solicitud.getEstado());
     }
 
-    // --- Paso 6 del PDF: escenario negativo ---
+    @Test
+    void asignarTecnicoInactivoDebeRetornarNegativo() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
+        Tecnico tecnicoInactivo = new Tecnico(2, "Pedro", "99999", "Redes", false);
 
-       @Test
+        when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
+
+        int resultado = servicio.asignarTecnico(solicitud.getId(), tecnicoInactivo);
+
+        assertEquals(-1, resultado);
+        verify(repositorio, never()).modificar(any());
+    }
+
+    @Test
+    void asignarTecnicoEnSolicitudInexistenteDebeRetornarNegativo() {
+        Tecnico tecnico = new Tecnico(1, "Ana", "67890", "Electricidad", true);
+        when(repositorio.buscarPorId(99L)).thenReturn(Optional.empty());
+
+        int resultado = servicio.asignarTecnico(99L, tecnico);
+
+        assertEquals(-1, resultado);
+    }
+
+    // ── cambiarEstado ───────────────────────────────────────────────────────
+
+    @Test
     void cuandoCambiarEstadoDebeGuardarSolicitudActualizada() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         Solicitud solicitud = new Solicitud("Reparar fuga", cliente);
 
         when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
@@ -59,5 +84,44 @@ class SolicitudServiceTest {
         assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
     }
 
+    // ── cerrarSolicitud ─────────────────────────────────────────────────────
 
+    @Test
+    void cerrarSolicitudEnProcesoDebeActualizarEstadoYFecha() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        Solicitud solicitud = new Solicitud("Reparar", cliente);
+        solicitud.setEstado(EstadoSolicitud.EN_PROCESO);
+
+        when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
+
+        Integer resultado = servicio.cerrarSolicitud(solicitud.getId());
+
+        verify(repositorio).modificar(solicitud);
+        assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
+        assertNotNull(solicitud.getFechaCierre());
+        assertEquals(0, resultado);
+    }
+
+    @Test
+    void cerrarSolicitudNoEnProcesoDebeRetornarNegativo() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        Solicitud solicitud = new Solicitud("Reparar", cliente);
+        // estado inicial = PENDIENTE, no EN_PROCESO
+
+        when(repositorio.buscarPorId(solicitud.getId())).thenReturn(Optional.of(solicitud));
+
+        Integer resultado = servicio.cerrarSolicitud(solicitud.getId());
+
+        assertEquals(-1, resultado);
+        verify(repositorio, never()).modificar(any());
+    }
+
+    @Test
+    void cerrarSolicitudInexistenteDebeRetornarNegativo() {
+        when(repositorio.buscarPorId(99L)).thenReturn(Optional.empty());
+
+        Integer resultado = servicio.cerrarSolicitud(99L);
+
+        assertEquals(-1, resultado);
+    }
 }

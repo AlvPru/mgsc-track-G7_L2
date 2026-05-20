@@ -26,8 +26,8 @@ class SolicitudRepositoryMemoriaTest {
     void setUp() {
         repo = SolicitudRepositoryMemoria.getInstance();
         repo.limpiar();
-        clienteStandard = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
-        clientePremium = new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        clienteStandard = new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD);
+        clientePremium = new Cliente("Ana", "22222", "ana@email.com", TipoCliente.PREMIUM);
     }
 
     @Test

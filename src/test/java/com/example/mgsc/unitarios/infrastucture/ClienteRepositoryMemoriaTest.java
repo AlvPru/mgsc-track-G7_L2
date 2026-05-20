@@ -4,10 +4,8 @@ import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.infrastucture.ClienteRepositoryMemoria;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,24 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClienteRepositoryMemoriaTest {
 
-    @BeforeEach
-    void resetSingleton() throws Exception {
-        Field instance = ClienteRepositoryMemoria.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
-    }
-
-    @Test
-    void getInstanceDevuelveInstanciaExistente() {
-        ClienteRepositoryMemoria primera = ClienteRepositoryMemoria.getInstance();
-        ClienteRepositoryMemoria segunda = ClienteRepositoryMemoria.getInstance();
-        assertSame(primera, segunda);
-    }
-
     @Test
     void guardarYListarCliente() {
-        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
+        Cliente cliente = new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD);
 
         repo.guardar(cliente);
         List<Cliente> lista = repo.listar();
@@ -43,8 +27,9 @@ class ClienteRepositoryMemoriaTest {
 
     @Test
     void buscarPorIdExistenteDevuelveCliente() {
-        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
-        Cliente cliente = new Cliente(42, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
+        Cliente cliente = new Cliente("Ana", "22222", "ana@email.com", TipoCliente.PREMIUM);
+        cliente.setId(42);
         repo.guardar(cliente);
 
         Optional<Cliente> resultado = repo.buscarPorId(42);
@@ -55,7 +40,7 @@ class ClienteRepositoryMemoriaTest {
 
     @Test
     void buscarPorIdInexistenteDevuelveVacio() {
-        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
+        ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
 
         Optional<Cliente> resultado = repo.buscarPorId(999);
 
@@ -64,15 +49,15 @@ class ClienteRepositoryMemoriaTest {
 
     @Test
     void existePorEmailDevuelveTrueCuandoExiste() {
-        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
-        repo.guardar(new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD));
+        ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
+        repo.guardar(new Cliente("Juan", "11111", "juan@email.com", TipoCliente.STANDARD));
 
         assertTrue(repo.existePorEmail("juan@email.com"));
     }
 
     @Test
     void existePorEmailDevuelveFalseCuandoNoExiste() {
-        ClienteRepositoryMemoria repo = ClienteRepositoryMemoria.getInstance();
+        ClienteRepositoryMemoria repo = new ClienteRepositoryMemoria();
 
         assertFalse(repo.existePorEmail("noexiste@email.com"));
     }

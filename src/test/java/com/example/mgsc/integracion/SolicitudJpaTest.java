@@ -26,7 +26,7 @@ class SolicitudJpaTest {
 
     @Test
     void guardarYRecuperarSolicitud() {
-        Cliente cliente = new Cliente(666, "Juan Pérez", "juan.perez@example.com", TipoCliente.PREMIUM);
+        Cliente cliente = new Cliente("Juan Pérez", "12345", "juan.perez@example.com", TipoCliente.PREMIUM);
         Solicitud solicitud = new Solicitud("Esto es de prueba", cliente);
         SolicitudEntity entity = SolicitudEntity.fromDomain(solicitud);
         repository.save(entity);
@@ -37,9 +37,9 @@ class SolicitudJpaTest {
 
     @Test
     void guardarYRecuperarSolicitudConTecnico() {
-        Cliente cliente = new Cliente(666, "Juan Pérez", "juan.perez@example.com", TipoCliente.PREMIUM);
+        Cliente cliente = new Cliente("Juan Pérez", "12345", "juan.perez@example.com", TipoCliente.PREMIUM);
         Solicitud solicitud = new Solicitud("Esto es de prueba", cliente);
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "67890", "Electricidad", true);
         solicitud.setTecnico(tecnico);
         SolicitudEntity entity = SolicitudEntity.fromDomain(solicitud);
         repository.save(entity);

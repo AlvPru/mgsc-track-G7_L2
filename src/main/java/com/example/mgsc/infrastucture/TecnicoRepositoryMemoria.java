@@ -6,18 +6,24 @@ import com.example.mgsc.infrastucture.interfaces.TecnicoRepositoryPort;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TecnicoRepositoryMemoria implements TecnicoRepositoryPort {
+    private long idCounter = 1;
     private final List<Tecnico> tecnicos = new ArrayList<>();
 
     public TecnicoRepositoryMemoria() {
-        //Vacio para que spring pueda inyectar esta clase sin problemas.
+        // Vacio para que spring pueda inyectar esta clase sin problemas.
     }
 
     @Override
-    public void guardar(Tecnico tecnico) {
+    public Tecnico guardar(Tecnico tecnico) {
+        if (tecnico.getId() == -1) {
+            tecnico.setId(idCounter++);
+        }
         tecnicos.add(tecnico);
+        return tecnico;
     }
 
     @Override
@@ -28,5 +34,15 @@ public class TecnicoRepositoryMemoria implements TecnicoRepositoryPort {
     @Override
     public List<Tecnico> listar() {
         return new ArrayList<>(tecnicos);
+    }
+
+    @Override
+    public Optional<Tecnico> buscarPorDni(String dni) {
+        return tecnicos.stream().filter(t -> t.getDni().equals(dni)).findFirst();
+    }
+
+    @Override
+    public Optional<Tecnico> buscarPorId(long id) {
+        return tecnicos.stream().filter(t -> t.getId() == id).findFirst();
     }
 }

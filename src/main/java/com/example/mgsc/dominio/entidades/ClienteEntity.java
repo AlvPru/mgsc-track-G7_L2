@@ -13,7 +13,7 @@ public class ClienteEntity extends PersonaEntity {
     private TipoCliente tipo;
 
     public Cliente toDomain(){
-        Cliente cliente = new Cliente(super.id,super.nombre,email,tipo);
+        Cliente cliente = new Cliente(super.nombre, super.dni, email, tipo);
         cliente.setId(super.getId());
         cliente.setEmail(this.email);
         cliente.setTipo(this.tipo);
@@ -24,6 +24,7 @@ public class ClienteEntity extends PersonaEntity {
         ClienteEntity entity = new ClienteEntity();
         entity.id = cliente.getId();
         entity.nombre = cliente.getNombre();
+        entity.dni = cliente.getDni();
         entity.email = cliente.getEmail();
         entity.tipo = cliente.getTipo();
         return entity;

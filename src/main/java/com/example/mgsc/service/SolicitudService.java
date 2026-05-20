@@ -5,9 +5,11 @@ import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.dominio.Tecnico;
 import com.example.mgsc.infrastucture.interfaces.SolicitudRepositoryPort;
 
+import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SolicitudService {
     private final SolicitudRepositoryPort solicitudRepository;
 
@@ -61,7 +63,18 @@ public class SolicitudService {
             return -1;
         }
         solicitud.setEstado(EstadoSolicitud.CERRADA);
+        solicitud.setFechaCierre(java.time.LocalDateTime.now());
         return modificar(solicitud);
+    }
+
+    public Solicitud reabrirSolicitud(long idSolicitud) {
+        Solicitud solicitud = buscarSolicitudOrNull(idSolicitud);
+        if (solicitud == null) {
+            return null;
+        }
+        solicitud.reabrir();
+        solicitudRepository.modificar(solicitud);
+        return solicitud;
     }
 
     private Solicitud buscarSolicitudOrNull(long idSolicitud) {

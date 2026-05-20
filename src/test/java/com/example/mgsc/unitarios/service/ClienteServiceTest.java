@@ -29,14 +29,15 @@ class ClienteServiceTest {
 
     @Test
     void guardarClienteDebeInvocarRepositorio() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
         servicio.guardar(cliente);
         verify(repositorio).guardar(cliente);
     }
 
     @Test
     void buscarPorIdDebeDelegarAlRepositorio() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
         when(repositorio.buscarPorId(1)).thenReturn(Optional.of(cliente));
 
         Optional<Cliente> resultado = servicio.buscarPorId(1);
@@ -47,8 +48,8 @@ class ClienteServiceTest {
 
     @Test
     void listarDebeOrdenarPremiumPrimero() {
-        Cliente standard = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
-        Cliente premium = new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM);
+        Cliente standard = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        Cliente premium = new Cliente("Ana", "67890", "ana@email.com", TipoCliente.PREMIUM);
         when(repositorio.listar()).thenReturn(Arrays.asList(standard, premium));
 
         List<Cliente> resultado = servicio.listar();
@@ -61,7 +62,7 @@ class ClienteServiceTest {
     void cuandoCrearClienteNuevoDebeGuardarYRetornar() {
         when(repositorio.existePorEmail("juan@email.com")).thenReturn(false);
 
-        Cliente resultado = servicio.crearCliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
+        Cliente resultado = servicio.crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
 
         verify(repositorio).guardar(resultado);
         assertEquals("Juan", resultado.getNombre());
@@ -73,7 +74,7 @@ class ClienteServiceTest {
         when(repositorio.existePorEmail("juan@email.com")).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () ->
-            servicio.crearCliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD));
+            servicio.crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD));
 
         verify(repositorio, never()).guardar(any());
     }
@@ -84,5 +85,26 @@ class ClienteServiceTest {
 
         assertThrows(IllegalArgumentException.class, () ->
             servicio.buscarPorIdOrThrow(99));
+    }
+
+    @Test
+    void cuandoCrearClienteConDniDuplicadoLanzaExcepcion() {
+        when(repositorio.existe("12345")).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () ->
+            servicio.crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD));
+
+        verify(repositorio, never()).guardar(any());
+    }
+
+    @Test
+    void buscarPorDniDebeDelegarAlRepositorio() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        when(repositorio.buscarPorDni("12345")).thenReturn(Optional.of(cliente));
+
+        Optional<Cliente> resultado = servicio.buscarPorDni("12345");
+
+        assertTrue(resultado.isPresent());
+        assertEquals("Juan", resultado.get().getNombre());
     }
 }

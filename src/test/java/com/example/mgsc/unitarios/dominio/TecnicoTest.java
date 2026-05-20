@@ -12,7 +12,7 @@ class TecnicoTest {
 
     @Test
     void debeCrearTecnicoConDatosValidos() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "12345", "Electricidad", true);
         assertEquals(1, tecnico.getId());
         assertEquals("Ana", tecnico.getNombre());
         assertEquals("Electricidad", tecnico.getEspecialidad());
@@ -21,28 +21,28 @@ class TecnicoTest {
 
     @Test
     void setEspecialidadDebeActualizar() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "12345", "Electricidad", true);
         tecnico.setEspecialidad("Redes");
         assertEquals("Redes", tecnico.getEspecialidad());
     }
 
     @Test
     void setActivoDebeActualizar() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "12345", "Electricidad", true);
         tecnico.setActivo(false);
         assertFalse(tecnico.isActivo());
     }
 
     @Test
     void setIdDebeActualizar() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "12345", "Electricidad", true);
         tecnico.setId(99);
         assertEquals(99, tecnico.getId());
     }
 
     @Test
     void setNombreDebeActualizar() {
-        Tecnico tecnico = new Tecnico(1, "Ana", "Electricidad", true);
+        Tecnico tecnico = new Tecnico(1, "Ana", "12345", "Electricidad", true);
         tecnico.setNombre("Luis");
         assertEquals("Luis", tecnico.getNombre());
     }

@@ -1,6 +1,8 @@
 package com.example.mgsc.unitarios.api;
 
 import com.example.mgsc.api.ClienteController;
+import com.example.mgsc.api.DTOs.ClienteRequestDTO;
+import com.example.mgsc.api.DTOs.ClienteResponseDTO;
 import com.example.mgsc.dominio.Cliente;
 import com.example.mgsc.dominio.TipoCliente;
 import com.example.mgsc.service.ClienteService;
@@ -14,10 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @Tag("unitario")
@@ -31,33 +33,55 @@ class ClienteControllerTest {
     private ClienteController controlador;
 
     @Test
-    void crearClienteDebeGuardarYRetornarCliente() {
-        Cliente resultado = controlador.crearCliente(1, "Juan", "juan@email.com", "STANDARD");
-        verify(clienteService).guardar(any(Cliente.class));
+    void crearClienteDebeDelegarAlServicioYRetornarDTO() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
+        when(clienteService.crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD))
+                .thenReturn(cliente);
+
+        ClienteRequestDTO request = new ClienteRequestDTO("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        ClienteResponseDTO response = controlador.crearCliente(request);
+
+        verify(clienteService).crearCliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        assertNotNull(response);
+        assertEquals(1, response.getId());
+        assertEquals("Juan", response.getNombre());
+        assertEquals("juan@email.com", response.getEmail());
+        assertEquals(TipoCliente.STANDARD, response.getTipo());
+    }
+
+    @Test
+    void obtenerClienteDebeRetornarDTOCorrecto() {
+        Cliente cliente = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente.setId(1);
+        when(clienteService.buscarPorIdOrThrow(1)).thenReturn(cliente);
+
+        ClienteResponseDTO resultado = controlador.obtenerCliente(1);
+
         assertNotNull(resultado);
+        assertEquals(1, resultado.getId());
+        assertEquals("Juan", resultado.getNombre());
+        assertEquals("juan@email.com", resultado.getEmail());
+        assertEquals(TipoCliente.STANDARD, resultado.getTipo());
     }
 
     @Test
-    void buscarPorIdDebeRetornarClienteCorrecto() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD);
-        when(clienteService.buscarPorId(1)).thenReturn(Optional.of(cliente));
-
-        Optional<Cliente> resultado = controlador.buscarPorId(1);
-
-        assertTrue(resultado.isPresent());
-        assertEquals(cliente, resultado.get());
-    }
-
-    @Test
-    void listarDebeRetornarTodosLosClientes() {
-        List<Cliente> clientes = Arrays.asList(
-            new Cliente(1, "Juan", "juan@email.com", TipoCliente.STANDARD),
-            new Cliente(2, "Ana", "ana@email.com", TipoCliente.PREMIUM)
-        );
+    void listarClientesDebeRetornarListaDeDTOs() {
+        Cliente cliente1 = new Cliente("Juan", "12345", "juan@email.com", TipoCliente.STANDARD);
+        cliente1.setId(1);
+        Cliente cliente2 = new Cliente("Ana", "67890", "ana@email.com", TipoCliente.PREMIUM);
+        cliente2.setId(2);
+        List<Cliente> clientes = Arrays.asList(cliente1, cliente2);
         when(clienteService.listar()).thenReturn(clientes);
 
-        List<Cliente> resultado = controlador.listar();
+        List<ClienteResponseDTO> resultado = controlador.listarClientes();
 
         assertEquals(2, resultado.size());
+        assertEquals(1, resultado.get(0).getId());
+        assertEquals("Juan", resultado.get(0).getNombre());
+        assertEquals(TipoCliente.STANDARD, resultado.get(0).getTipo());
+        assertEquals(2, resultado.get(1).getId());
+        assertEquals("Ana", resultado.get(1).getNombre());
+        assertEquals(TipoCliente.PREMIUM, resultado.get(1).getTipo());
     }
 }

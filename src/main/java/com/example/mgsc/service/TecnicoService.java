@@ -5,6 +5,7 @@ import com.example.mgsc.infrastucture.interfaces.TecnicoRepositoryPort;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TecnicoService {
@@ -14,8 +15,8 @@ public class TecnicoService {
         this.tecnicoRepository = tecnicoRepository;
     }
 
-    public void guardar(Tecnico tecnico) {
-        tecnicoRepository.guardar(tecnico);
+    public Tecnico guardar(Tecnico tecnico) {
+        return tecnicoRepository.guardar(tecnico);
     }
 
     public List<Tecnico> buscarActivo() {
@@ -24,5 +25,26 @@ public class TecnicoService {
 
     public List<Tecnico> listar() {
         return tecnicoRepository.listar();
+    }
+
+    public Optional<Tecnico> buscarPorDni(String dni) {
+        return tecnicoRepository.buscarPorDni(dni);
+    }
+
+    public Tecnico crearTecnico(String nombre, String dni, String especialidad, boolean activo) {
+        if (tecnicoRepository.buscarPorDni(dni).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un tecnico con DNI: " + dni);
+        }
+        Tecnico tecnico = new Tecnico(nombre, dni, especialidad, activo);
+        return tecnicoRepository.guardar(tecnico);
+    }
+
+    public Optional<Tecnico> buscarPorId(long id) {
+        return tecnicoRepository.buscarPorId(id);
+    }
+
+    public Tecnico buscarPorIdOrThrow(long id) {
+        return tecnicoRepository.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tecnico no encontrado: " + id));
     }
 }
