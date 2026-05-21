@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 public class ClienteEntity extends PersonaEntity {
     
     private String email;
+
+    @Enumerated(EnumType.STRING)
     private TipoCliente tipo;
 
     public Cliente toDomain(){
@@ -22,7 +24,9 @@ public class ClienteEntity extends PersonaEntity {
 
     public static ClienteEntity fromDomain(Cliente cliente){
         ClienteEntity entity = new ClienteEntity();
-        entity.id = cliente.getId();
+        if (cliente.getId() >= 0) {
+            entity.id = cliente.getId();
+        }
         entity.nombre = cliente.getNombre();
         entity.dni = cliente.getDni();
         entity.email = cliente.getEmail();
