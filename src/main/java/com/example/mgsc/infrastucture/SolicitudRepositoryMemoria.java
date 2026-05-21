@@ -3,12 +3,14 @@ package com.example.mgsc.infrastucture;
 import com.example.mgsc.dominio.Solicitud;
 import com.example.mgsc.infrastucture.interfaces.SolicitudRepositoryPort;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Profile("memory")
 public class SolicitudRepositoryMemoria implements SolicitudRepositoryPort {
     private long idCounter = 1;
     private final List<Solicitud> solicitudes = new ArrayList<>();

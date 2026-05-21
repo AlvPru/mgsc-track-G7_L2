@@ -14,6 +14,8 @@ public class SolicitudEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String descripcion;
+
+    @Enumerated(EnumType.STRING)
     private EstadoSolicitud estado;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -36,6 +38,9 @@ public class SolicitudEntity {
 
     public static SolicitudEntity fromDomain(Solicitud solicitud) {
         SolicitudEntity entity = new SolicitudEntity();
+        if (solicitud.getId() >= 0) {
+            entity.id = solicitud.getId();
+        }
         entity.descripcion = solicitud.getDescripcion();
         entity.estado = solicitud.getEstado();
         entity.clienteAsignado = ClienteEntity.fromDomain(solicitud.getClienteAsignado());

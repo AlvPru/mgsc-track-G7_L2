@@ -21,7 +21,9 @@ public class TecnicoEntity extends PersonaEntity {
 
     public static TecnicoEntity fromDomain(Tecnico tecnico){
         TecnicoEntity entity = new TecnicoEntity();
-        entity.id = tecnico.getId();
+        if (tecnico.getId() >= 0) {
+            entity.id = tecnico.getId();
+        }
         entity.nombre = tecnico.getNombre();
         entity.especialidad = tecnico.getEspecialidad();
         entity.activo = tecnico.isActivo();
