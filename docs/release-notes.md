@@ -1,0 +1,1 @@
+En este commint se añadieron archivos relacionados al Docker y al control de versiones, se tratata de un PATCH que nos hara pasar a la version 1.0.1
