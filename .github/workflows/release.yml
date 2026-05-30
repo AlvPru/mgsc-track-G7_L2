@@ -30,14 +30,34 @@ jobs:
             -Dsonar.organization=alvpru \
             -Dsonar.host.url=https://sonarcloud.io
 
-      - name: Create GitHub Release and upload JAR
-        uses: softprops/action-gh-release@v1
+      - name: Find built JAR
+        id: find_jar
+        run: |
+          JAR_FILE=$(find target -maxdepth 1 -name '*.jar' ! -name '*original.jar' | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "No JAR found in target directory" >&2
+            exit 1
+          fi
+          echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
         with:
           tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
-          files: target/*.jar
+          release_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload JAR asset to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.JAR_FILE }}
+          asset_name: ${{ github.ref_name }}.jar
+          asset_content_type: application/java-archive
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
