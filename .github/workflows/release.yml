@@ -6,12 +6,12 @@ on:
       - 'v*'
 
 jobs:
-  build-and-publish:
-    name: Generate Artifact and Docker Image
+  release:
+    name: Release on tag
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java 17
@@ -20,12 +20,21 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Build JAR with Maven
-        run: mvn clean package -DskipTests
+      - name: Build, test and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn -B clean verify \
+            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=AlvPru_mgsc-track-G7_L2 \
+            -Dsonar.organization=alvpru \
+            -Dsonar.host.url=https://sonarcloud.io
 
       - name: Create GitHub Release and upload JAR
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           files: target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,7 +43,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v5
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
